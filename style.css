@@ -1,0 +1,533 @@
+/* style.css */
+/* Defines common styling rules for the Mentor and Mentee dashboards */
+
+/* CSS Variables for consistent theming */
+:root {
+    --primary-color: #0d6efd;     /* Bootstrap primary blue */
+    --secondary-color: #6c757d;   /* Bootstrap secondary gray */
+    --success-color: #198754;     /* Bootstrap success green */
+    --danger-color: #dc3545;      /* Bootstrap danger red */
+    --warning-color: #ffc107;     /* Bootstrap warning yellow */
+    --info-color: #0dcaf0;        /* Bootstrap info cyan */
+    --light-color: #f8f9fa;      /* Bootstrap light gray */
+    --dark-color: #212529;       /* Bootstrap dark gray */
+    --white-color: #ffffff;      /* White */
+    --sidebar-bg: #343a40;       /* Sidebar background color (dark gray) */
+    --sidebar-text: rgba(255, 255, 255, 0.8); /* Sidebar link text color */
+    --sidebar-text-active: var(--white-color); /* Sidebar active/hover link text color */
+    --sidebar-hover-bg: rgba(255, 255, 255, 0.15); /* Sidebar link hover background */
+    --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Standard card shadow */
+    --card-hover-shadow: 0 5px 15px rgba(0, 0, 0, 0.12); /* Card shadow on hover */
+    --border-color: #e9ecef;     /* Light border color */
+    --font-family: 'Inter', Arial, sans-serif; /* Primary font */
+    --border-radius: 8px;        /* Standard border radius */
+    --border-radius-sm: 5px;     /* Small border radius */
+    --border-radius-lg: 10px;    /* Large border radius */
+}
+
+/* Basic HTML and Body setup */
+html, body {
+    height: 100%; /* Ensure html and body take full height */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--light-color); /* Light background for the page */
+    font-family: var(--font-family);     /* Apply primary font */
+    display: flex; /* Use flexbox for overall layout */
+    min-height: 100vh; /* Ensure body fills at least the viewport height */
+}
+
+/* Wrapper for sidebar and main content - used for overall flex layout */
+#dashboardWrapper {
+    display: flex;
+    flex-grow: 1; /* Allow wrapper to fill available space */
+    width: 100%;  /* Ensure wrapper takes full width */
+    visibility: hidden; /* Initially hidden until JS auth check passes */
+}
+
+
+/* Sidebar Styling */
+.sidebar {
+    width: 260px;               /* Fixed width */
+    flex-shrink: 0;             /* Prevent sidebar from shrinking */
+    background-color: var(--sidebar-bg); /* Dark background */
+    color: var(--white-color);      /* White text */
+    display: flex;
+    flex-direction: column;     /* Stack elements vertically */
+    height: 100vh;              /* Full viewport height */
+    position: sticky;           /* Keep sidebar visible when scrolling main content */
+    top: 0;
+    overflow-y: auto;           /* Allow internal scrolling if content exceeds height */
+    padding-top: 1.5rem;        /* Padding at the top */
+    border-top-right-radius: var(--border-radius);    /* Rounded corner */
+    border-bottom-right-radius: var(--border-radius); /* Rounded corner */
+}
+
+/* Sidebar Header (Mentor/Mentee photo and name) */
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+}
+/* Ensure the "Mentor"/"Mentee" text is clearly visible */
+.sidebar .sidebar-header p.small {
+    color: var(--white-color) !important;
+    opacity: 1;
+}
+
+/* Profile photo style within sidebar */
+.mentor-photo { /* Also used for mentee photo */
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;          /* Circular photo */
+    margin-bottom: 0.75rem;
+    border: 3px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+    object-fit: cover;           /* Ensure image covers the area well */
+}
+
+/* Sidebar Navigation Links */
+.sidebar .nav-link {
+    color: var(--sidebar-text);     /* Default text color */
+    padding: 12px 20px;             /* Padding around links */
+    transition: all 0.3s ease;      /* Smooth transitions */
+    border-radius: var(--border-radius-sm); /* Slightly rounded */
+    margin: 4px 15px;               /* Spacing between links */
+    display: flex;                  /* Align icon and text */
+    align-items: center;
+}
+
+/* Sidebar icons */
+.sidebar .nav-link .fa-fw {
+    margin-right: 10px;         /* Space between icon and text */
+    width: 1.25em;              /* Consistent icon width */
+    text-align: center;         /* Center icons */
+}
+
+/* Sidebar link hover and active states */
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: var(--sidebar-hover-bg); /* Light background on hover/active */
+    color: var(--sidebar-text-active);       /* White text on hover/active */
+    transform: translateX(3px);            /* Subtle move effect */
+}
+
+/* Ensure logout link at the bottom has some padding */
+.sidebar .mt-auto {
+    padding-bottom: 1rem;
+}
+
+/* Main Content Area Styling */
+.main-content {
+    flex-grow: 1;               /* Take remaining horizontal space */
+    padding: 2rem;              /* Padding around content */
+    display: flex;              /* Use flexbox for vertical layout */
+    flex-direction: column;     /* Stack navbar, sections, footer vertically */
+    min-height: 100vh;          /* Try to fill viewport height */
+    overflow-y: auto;           /* Allow vertical scrolling if content overflows */
+}
+
+/* Top Navigation Bar within Main Content */
+.main-navbar {
+    background-color: var(--white-color); /* White background */
+    border-radius: var(--border-radius);  /* Rounded corners */
+    box-shadow: var(--card-shadow);       /* Subtle shadow */
+    margin-bottom: 1.5rem;                /* Space below navbar */
+    padding: 0.75rem 1.5rem;            /* Padding inside navbar */
+    flex-shrink: 0;                     /* Prevent navbar from shrinking */
+}
+
+/* Dashboard Sections (e.g., Welcome, Mentees, Meetings) */
+.dashboard-section {
+    display: none; /* Hide sections by default */
+    animation: fadeIn 0.5s ease-in-out; /* Fade-in animation */
+    flex-grow: 1; /* Allow active section to fill available vertical space */
+}
+
+/* Active dashboard section */
+.dashboard-section.active {
+    display: block; /* Show the active section */
+    /* Use `display: flex; flex-direction: column;` if the section needs internal flex layout */
+}
+
+/* Footer Styling */
+footer {
+    margin-top: auto; /* Push footer to the bottom of the flex container */
+    padding-top: 1rem; /* Space above footer */
+    flex-shrink: 0; /* Prevent footer from shrinking */
+    text-align: center; /* Center footer text */
+    color: var(--secondary-color); /* Muted text color */
+}
+
+
+/* Card Styling (Used for stats, lists, etc.) */
+.card {
+    margin-bottom: 1.5rem; /* Consistent margin below cards */
+    border-radius: var(--border-radius); /* Rounded corners */
+    box-shadow: var(--card-shadow);       /* Standard shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+    border: none; /* Remove default border */
+    display: flex; /* Use flex for internal layout */
+    flex-direction: column; /* Stack header/body/footer */
+    background-color: var(--white-color); /* Default white background */
+}
+
+/* Card hover effect */
+.card:hover {
+    transform: translateY(-5px);        /* Lift card slightly */
+    box-shadow: var(--card-hover-shadow); /* Increase shadow */
+}
+
+/* Card Header */
+.card-header {
+    background-color: var(--white-color); /* Match card background */
+    border-bottom: 1px solid var(--border-color); /* Light border */
+    border-radius: var(--border-radius) var(--border-radius) 0 0; /* Rounded top corners */
+    padding: 1rem 1.25rem;
+    flex-shrink: 0; /* Prevent header shrinking */
+}
+
+/* Card Body */
+.card-body {
+    padding: 1.25rem;
+    flex-grow: 1; /* Allow body to take available space within card */
+}
+
+/* Card Footer */
+.card-footer {
+    background-color: var(--white-color); /* Match card background */
+    border-top: 1px solid var(--border-color); /* Light border */
+    border-radius: 0 0 var(--border-radius) var(--border-radius); /* Rounded bottom corners */
+    padding: 0.75rem 1.25rem;
+    flex-shrink: 0; /* Prevent footer shrinking */
+}
+
+/* Specific centering for the welcome block */
+.welcome-block .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    text-align: center;
+}
+
+
+/* Stat Card Styling (Dashboard overview cards) */
+.stat-card i { /* Icon style */
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+.stat-card .display-6 { /* Number style */
+    font-weight: 600;
+}
+
+/* Progress Bar Styling (Not currently used, but defined) */
+.progress {
+    height: 10px;
+    margin-bottom: 10px;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Avatar Placeholder (Used for mentees when no photo is available) */
+.avatar-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: var(--secondary-color); /* Default background */
+    color: white;
+    border-radius: 50%; /* Circular */
+    font-weight: bold;
+    font-size: 1.1rem;
+    flex-shrink: 0; /* Prevent shrinking in flex layouts */
+}
+
+/* List Group Styling (Used for meetings, issues on dashboard) */
+.list-group-item {
+    transition: background-color 0.3s ease; /* Smooth hover background */
+    border: none; /* Remove default borders */
+    padding: 1rem 0; /* Adjust padding as needed */
+}
+.list-group-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color); /* Add border between items */
+}
+.list-group-item:hover {
+    background-color: var(--light-color); /* Light background on hover */
+}
+
+/* Button Styling */
+.btn {
+    border-radius: var(--border-radius-sm); /* Slightly rounded */
+    transition: all 0.2s ease; /* Smooth transitions */
+}
+.btn-outline-primary:hover { /* Example hover effect */
+    transform: scale(1.03);
+}
+.btn-sm { /* Small button adjustments */
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+/* Notification Dropdown Styling */
+#notificationDropdown {
+    position: relative; /* Needed for badge positioning */
+}
+.notification-badge {
+    position: absolute; /* Position relative to parent dropdown */
+    top: -5px;
+    right: -5px;
+    font-size: 0.6rem;
+    padding: 0.2em 0.4em;
+    border-radius: 50%; /* Circular badge */
+}
+
+/* Dropdown Menu Styling */
+.dropdown-menu {
+    border-radius: var(--border-radius); /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border: none; /* Remove default border */
+}
+
+/* Modal Styling */
+.modal-content {
+    border-radius: var(--border-radius-lg); /* Larger radius for modals */
+    border: none;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); /* Softer shadow */
+}
+.modal-header {
+    background-color: var(--light-color); /* Light header */
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; /* Rounded top */
+    border-bottom: 1px solid #dee2e6;
+}
+.modal-footer {
+    background-color: var(--light-color); /* Light footer */
+    border-top: 1px solid #dee2e6;
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg); /* Rounded bottom */
+}
+
+
+/* Keyframe Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Toast Notification Container */
+.toast-container {
+    position: fixed; /* Fixed position */
+    bottom: 20px;
+    right: 20px;
+    z-index: 1100; /* Ensure toasts are above most other content */
+}
+
+/* Table Styling */
+.table th,
+.table td {
+    vertical-align: middle; /* Align cell content vertically */
+}
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.03); /* Subtle hover effect for table rows */
+}
+
+/* Badge Styling */
+.badge { /* General badge style */
+    padding: 0.4em 0.6em;
+    font-size: 0.75rem;
+    font-weight: 500; /* Slightly bolder */
+}
+
+/* Specific styles for Mentee Cards (in Mentor Dashboard) */
+.mentee-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.mentee-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.mentee-card .card-body {
+    /* Removed flex for better button wrapping on small screens */
+}
+.mentee-card .avatar-placeholder {
+    margin-right: 1rem;
+    float: left; /* Float avatar left */
+}
+.mentee-card .btn-group-sm {
+    clear: left; /* Ensure buttons appear below floated avatar/text */
+    padding-top: 0.5rem; /* Add some space above buttons */
+}
+.mentee-card h5 { margin-bottom: 0.25rem; } /* Reduce margin */
+.mentee-card p { margin-bottom: 0.5rem; } /* Reduce margin */
+
+/* Loading Placeholder Style */
+.loading-placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: var(--secondary-color);
+    font-style: italic;
+    width: 100%; /* Ensure it takes full width in containers like tbody */
+}
+
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 991.98px) { /* Target tablets and smaller devices */
+    body {
+        flex-direction: column; /* Stack sidebar/content vertically */
+        height: auto; /* Allow body height to adjust */
+        min-height: 100vh;
+    }
+    #dashboardWrapper {
+         flex-direction: column; /* Stack vertically */
+         flex-grow: 1;
+    }
+
+    /* Change sidebar to a horizontal bar at the top */
+    .sidebar {
+        width: 100%;                /* Full width */
+        height: auto;               /* Auto height */
+        min-height: auto;
+        position: static;           /* Remove sticky positioning */
+        border-radius: 0;           /* Remove rounding */
+        flex-direction: row;        /* Arrange items horizontally */
+        overflow-x: auto;           /* Allow horizontal scrolling if needed */
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Add shadow */
+        flex-shrink: 0;             /* Prevent shrinking */
+    }
+    .sidebar-header {
+        display: none; /* Hide the vertical header content */
+    }
+    .sidebar .nav {
+        flex-direction: row !important; /* Ensure horizontal layout */
+        flex-wrap: nowrap;            /* Prevent wrapping */
+    }
+    .sidebar .nav-link {
+        margin: 2px 5px;
+        padding: 8px 15px;          /* Adjust padding for horizontal layout */
+        white-space: nowrap;        /* Prevent link text wrapping */
+    }
+    .sidebar .nav-link .fa-fw {
+        margin-right: 5px;          /* Reduce space next to icon */
+    }
+    /* Push logout link to the far right */
+    .sidebar .mt-auto {
+        margin-left: auto !important;
+        padding-bottom: 0;
+    }
+    .sidebar .mt-auto .nav-link {
+        margin-right: 15px; /* Add margin to the right of logout */
+    }
+
+    /* Adjust main content for horizontal sidebar */
+    .main-content {
+        height: auto;
+        /* Adjust min-height based on the actual height of your horizontal sidebar */
+        min-height: calc(100vh - 60px); /* Example: 60px sidebar height */
+        padding: 1rem; /* Reduce padding */
+        flex-grow: 1;
+    }
+    .main-navbar {
+        margin-bottom: 1rem; /* Reduce margin */
+    }
+    #pageTitle {
+        font-size: 1.25rem; /* Reduce title size */
+    }
+}
+
+@media (max-width: 767.98px) { /* Target smaller mobile devices */
+    .stat-card .display-6 {
+        font-size: 1.5rem; /* Reduce font size for stats */
+    }
+    /* Fix dropdown positioning in collapsed navbar */
+     .main-navbar .navbar-nav {
+         align-items: flex-start !important;
+     }
+     .main-navbar .dropdown-menu {
+         position: absolute !important;
+     }
+}
+/* === Login Page Specific Styles === */
+
+/* Body style specific to login page for background */
+body.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #eef2f3, #d7dbdf); /* Example gradient */
+    /* background-color: var(--light-color); */ /* Keep this if you prefer solid color */
+    font-family: var(--font-family);
+}
+
+/* Login Card Adjustments */
+.login-card {
+    width: 100%;
+    max-width: 450px; /* Slightly wider */
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    border: none; /* Remove default border */
+    overflow: hidden; /* Ensure header background doesn't bleed */
+}
+
+/* Card Header Styling */
+.login-card .card-header {
+    background-color: var(--primary-color); /* Use theme primary color */
+    color: var(--white-color);
+    border-bottom: none;
+}
+
+.login-card .card-header img {
+    opacity: 0.9;
+}
+
+/* Role Selection Styling */
+.role-selection .form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+ .role-selection .form-check-label {
+     cursor: pointer;
+     font-weight: 500;
+ }
+ .role-selection .form-check-input:checked + .form-check-label {
+     color: var(--primary-color);
+ }
+
+/* Input Group Styling */
+.login-card .input-group-text {
+    background-color: var(--light-color);
+    border-right: none;
+    color: var(--secondary-color);
+}
+.login-card .form-control {
+    border-left: none; /* Join visually with icon */
+}
+.login-card .form-control:focus {
+   border-color: var(--primary-color);
+   box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+   /* Remove the border-left override on focus if it looks odd */
+   border-left: none;
+   z-index: 3; /* Ensure focused input overlaps addon */
+}
+
+/* Login Button Styling */
+.login-button { /* Use the class added in HTML */
+    padding: 0.75rem 1.25rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+}
+
+/* Error Message Styling */
+#errorMessage {
+    font-size: 0.9rem;
+    font-weight: 500;
+}

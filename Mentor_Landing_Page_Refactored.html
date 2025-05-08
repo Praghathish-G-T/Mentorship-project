@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="dashboardWrapper" class="d-flex" style="visibility: hidden;"> <aside class="sidebar">
+            <div class="sidebar-header">
+                
+                <h5 id="sidebarMentorName">Loading...</h5>
+                <p class="text-muted small">Mentor</p>
+            </div>
+            <nav>
+                <ul class="nav flex-column flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-section="dashboard"><i class="fas fa-home fa-fw"></i> Welcome</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="mentees"><i class="fas fa-users fa-fw"></i> Mentees</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="meetings"><i class="fas fa-calendar-alt fa-fw"></i> Meetings</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="issues"><i class="fas fa-exclamation-triangle fa-fw"></i> Issues</a>
+                    </li>
+                    </ul>
+            </nav>
+            <ul class="nav flex-column mt-auto">
+                 <li class="nav-item">
+                    <a class="nav-link" href="#" id="logoutLinkSidebar"><i class="fas fa-sign-out-alt fa-fw"></i> Logout</a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <nav class="navbar navbar-expand-lg main-navbar">
+                <div class="container-fluid">
+                     <h4 id="pageTitle" class="mb-0">Welcome</h4>
+                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul class="navbar-nav ms-auto align-items-center">
+                            <li class="nav-item me-2">
+                                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#scheduleMeetingModal"><i class="fas fa-calendar-plus me-1"></i> Schedule</button>
+                             </li>
+                             <li class="nav-item me-2">
+                                <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addMenteeModal"><i class="fas fa-user-plus me-1"></i> Add Mentee</button>
+                             </li>
+                              <li class="nav-item me-3">
+                                <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#reportIssueModal"><i class="fas fa-flag me-1"></i> Report Issue</button>
+                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Toggle Notifications">
+                                    <i class="fas fa-bell fa-lg"></i>
+                                    <span id="notificationBadge" class="badge rounded-pill bg-danger notification-badge" style="display: none;">0</span>
+                                </a>
+                                <ul id="notificationList" class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                                     <li><p class="dropdown-item text-muted mb-0 small">Loading...</p></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-center text-muted small" href="#">View all notifications</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    
+                                    <span id="navbarMentorName">Loading...</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                                    
+                                    <li><a class="dropdown-item" href="#" id="logoutLinkDropdown"><i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <section id="dashboard" class="dashboard-section active">
+                 <div class="card welcome-block bg-light border-0 mb-4">
+                     <div class="card-body text-center">
+                      
+                        <h4 class="card-title">Welcome, <span id="welcomeMentorName">Mentor</span>!</h4>
+                        <p class="card-text text-muted">Here's a quick overview of your mentorship activities.</p>
+                    </div>
+                </div>
+                <div class="row">
+                     <div class="col-md-4">
+                        <div class="card text-center text-bg-primary mb-3 stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <i class="fas fa-users fa-2x"></i>
+                                    <div class="text-end">
+                                        <div class="display-6" id="totalMenteesCount">-</div>
+                                        <div class="small">Total Mentees</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center text-bg-info mb-3 stat-card">
+                             <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <i class="fas fa-calendar-check fa-2x"></i>
+                                    <div class="text-end">
+                                        <div class="display-6" id="todaysMeetingsCount">-</div>
+                                        <div class="small">Today's Meetings</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center text-bg-danger mb-3 stat-card">
+                             <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                                    <div class="text-end">
+                                        <div class="display-6" id="openIssuesCount">-</div>
+                                        <div class="small">Open Issues</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                         <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Upcoming Meetings</h5>
+                                 <a href="#" class="btn btn-sm btn-outline-secondary" data-section-target="meetings"><i class="fas fa-external-link-alt me-1"></i> View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group list-group-flush" id="upcomingMeetingsList">
+                                    <div class="loading-placeholder p-3">Loading meetings... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                 <h5 class="mb-0">Recent Open Issues</h5>
+                                 <a href="#" class="btn btn-sm btn-outline-secondary" data-section-target="issues"><i class="fas fa-external-link-alt me-1"></i> View All</a>
+                             </div>
+                            <div class="card-body">
+                                 <div class="list-group list-group-flush" id="dashboardOpenIssuesList">
+                                      <div class="loading-placeholder p-3">Loading issues... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                                 </div>
+                                 <p class="text-muted text-center small mt-2" id="noOpenIssuesMsg" style="display: none;">No open issues.</p>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mentees" class="dashboard-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                     <h4 class="mb-0">My Mentees</h4>
+                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMenteeModal"><i class="fas fa-user-plus me-1"></i> Add New Mentee</button>
+                </div>
+                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="menteeListContainer">
+                      <div class="loading-placeholder col-12 p-3">Loading mentees... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                 </div>
+            </section>
+
+            <section id="meetings" class="dashboard-section">
+                 <div class="d-flex justify-content-between align-items-center mb-3">
+                     <h4 class="mb-0">Scheduled Meetings</h4>
+                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleMeetingModal"><i class="fas fa-calendar-plus me-1"></i> Schedule New Meeting</button>
+                 </div>
+                <div class="card">
+                     <div class="card-body">
+                        <div class="list-group list-group-flush" id="meetingsSectionList">
+                           <div class="loading-placeholder p-3">Loading meetings... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                        </div>
+                     </div>
+                </div>
+            </section>
+
+            <section id="issues" class="dashboard-section">
+                 <div class="d-flex justify-content-between align-items-center mb-3">
+                     <h4 class="mb-0">Mentee Issues</h4>
+                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportIssueModal"><i class="fas fa-flag me-1"></i> Report New Issue</button>
+                 </div>
+                 <div class="card">
+                     <div class="card-header">
+                        <div class="btn-group w-100" role="group" aria-label="Issue Status Filter" id="issueStatusFilter">
+                            <input type="radio" class="btn-check" name="issueFilter" id="filterAll" autocomplete="off" checked data-filter="all">
+                            <label class="btn btn-outline-secondary" for="filterAll">All</label>
+
+                            <input type="radio" class="btn-check" name="issueFilter" id="filterOpen" autocomplete="off" data-filter="Open">
+                            <label class="btn btn-outline-danger" for="filterOpen">Open</label>
+
+                            <input type="radio" class="btn-check" name="issueFilter" id="filterInProgress" autocomplete="off" data-filter="In Progress">
+                            <label class="btn btn-outline-warning" for="filterInProgress">In Progress</label>
+
+                            <input type="radio" class="btn-check" name="issueFilter" id="filterResolved" autocomplete="off" data-filter="Resolved">
+                            <label class="btn btn-outline-success" for="filterResolved">Resolved</label>
+                        </div>
+                     </div>
+                     <div class="card-body">
+                        <div class="table-responsive">
+                             <table class="table table-hover">
+                                 <thead>
+                                    <tr>
+                                        <th>Mentee</th>
+                                        <th>Issue Description</th>
+                                        <th>Reported On</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="issuesTableBody">
+                                   <tr><td colspan="6" class="loading-placeholder p-3">Loading issues... <span class="spinner-border spinner-border-sm ms-2"></span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                     </div>
+                </div>
+            </section>
+
+            <footer class="mt-4">
+                 <small>&copy; <span id="currentYear"></span> Mentor Dashboard. All Rights Reserved.</small>
+             </footer>
+
+        </main>
+    </div> <div class="modal fade" id="menteeDetailModal" tabindex="-1" aria-labelledby="menteeDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="menteeDetailModalLabel">Mentee Details: <span id="detailMenteeName">Mentee Name</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Subject:</strong> <span id="detailMenteeSubject">Subject</span></p>
+                    <p><strong>Contact:</strong> <span id="detailMenteeContact">Email</span></p>
+                    <h6 class="mt-3">Recent Notes:</h6>
+                    <ul class="list-group list-group-flush" id="detailMenteeNotes">
+                        <li class="list-group-item text-muted">Loading notes...</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="rescheduleMeetingModal" tabindex="-1" aria-labelledby="rescheduleMeetingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="rescheduleMeetingForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rescheduleMeetingModalLabel">Reschedule Meeting</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="rescheduleMeetingId">
+                        <p>Rescheduling meeting with: <strong id="rescheduleMenteeName">Mentee Name</strong></p>
+                        <p>Current Time: <span id="rescheduleCurrentTime">Date and Time</span></p>
+                        <div class="mb-3">
+                            <label for="rescheduleDate" class="form-label">New Date</label>
+                            <input type="date" class="form-control" id="rescheduleDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="rescheduleTime" class="form-label">New Time</label>
+                            <input type="time" class="form-control" id="rescheduleTime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="rescheduleReason" class="form-label">Reason for Rescheduling (Optional)</label>
+                            <textarea class="form-control" id="rescheduleReason" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Reschedule</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addMenteeModal" tabindex="-1" aria-labelledby="addMenteeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="addMenteeForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addMenteeModalLabel">Add New Mentee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="newMenteeName" class="form-label">Mentee Name</label>
+                            <input type="text" class="form-control" id="newMenteeName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newMenteeSubject" class="form-label">Subject / Area</label>
+                            <input type="text" class="form-control" id="newMenteeSubject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newMenteeEmail" class="form-label">Email (Optional)</label>
+                            <input type="email" class="form-control" id="newMenteeEmail">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Add Mentee</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="scheduleMeetingModal" tabindex="-1" aria-labelledby="scheduleMeetingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="scheduleMeetingForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="scheduleMeetingModalLabel">Schedule New Meeting</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="scheduleMenteeName" class="form-label">Select Mentee</label>
+                            <select class="form-select" id="scheduleMenteeName" required>
+                                <option value="" disabled selected>Loading...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="scheduleDate" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="scheduleDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="scheduleTime" class="form-label">Time</label>
+                            <input type="time" class="form-control" id="scheduleTime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="scheduleDuration" class="form-label">Duration (minutes)</label>
+                            <select class="form-select" id="scheduleDuration" required>
+                                <option value="15">15 min</option>
+                                <option value="30" selected>30 min</option>
+                                <option value="45">45 min</option>
+                                <option value="60">60 min</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="scheduleNotes" class="form-label">Meeting Notes (Optional)</label>
+                            <textarea class="form-control" id="scheduleNotes" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Schedule Meeting</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="reportIssueModal" tabindex="-1" aria-labelledby="reportIssueModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="reportIssueForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reportIssueModalLabel">Report New Issue</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="reportMenteeName" class="form-label">Select Mentee</label>
+                            <select class="form-select" id="reportMenteeName" required>
+                                <option value="" disabled selected>Loading...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reportIssueDescription" class="form-label">Issue Description</label>
+                            <textarea class="form-control" id="reportIssueDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reportPriority" class="form-label">Priority</label>
+                            <select class="form-select" id="reportPriority" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Report Issue</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="respondIssueModal" tabindex="-1" aria-labelledby="respondIssueModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="respondIssueForm">
+                    <input type="hidden" id="respondIssueId">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="respondIssueModalLabel">Respond to Issue</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Mentee: <strong id="respondMenteeName">Mentee Name</strong></p>
+                        <p>Issue: <span id="respondIssueDescription" class="text-muted">Issue description...</span></p>
+                        <hr>
+                        <div class="mb-3">
+                            <label for="respondStatusUpdate" class="form-label">Update Status</label>
+                            <select class="form-select" id="respondStatusUpdate" required>
+                                <option value="Open">Open</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="respondNotes" class="form-label">Response / Notes</label>
+                            <textarea class="form-control" id="respondNotes" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Issue</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete mentee: <strong id="deleteMenteeNameConfirm">Mentee Name</strong>?
+                    <p class="text-danger small mt-2">This will also delete their associated user login.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteMenteeBtn" data-mentee-id="">Confirm Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cancelMeetingConfirmationModal" tabindex="-1" aria-labelledby="cancelMeetingConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelMeetingConfirmationModalLabel">Confirm Cancellation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to cancel the meeting with <strong id="cancelMeetingMenteeNameConfirm">Mentee Name</strong> on <span id="cancelMeetingDateTimeConfirm">Date/Time</span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep Meeting</button>
+                    <button type="button" class="btn btn-danger" id="confirmCancelMeetingBtn" data-meeting-id="">Confirm Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /**
+         * Mentor Dashboard Frontend Script (Auth-Enabled & Dynamic Updates)
+         * Handles API calls, UI updates, event listeners, and navigation for the mentor view.
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("Mentor Dashboard Script Initializing (Auth Version)");
+
+            // --- Authentication Check ---
+            const userRole = sessionStorage.getItem('userRole');
+            const userId = sessionStorage.getItem('userId');
+            const userName = sessionStorage.getItem('userName');
+            const dashboardWrapper = document.getElementById('dashboardWrapper');
+
+            if (!userId || userRole !== 'mentor') {
+                console.warn("Auth check failed. Redirecting to login.");
+                window.location.href = 'login.html';
+                return;
+            } else {
+                console.log(`Authenticated as Mentor: User ID ${userId}, Username: ${userName}`);
+                 if(dashboardWrapper) dashboardWrapper.style.visibility = 'visible';
+            }
+
+            // --- Global Element References ---
+            const navLinks = document.querySelectorAll('.sidebar .nav-link[data-section]');
+            const sections = document.querySelectorAll('.dashboard-section');
+            const pageTitle = document.getElementById('pageTitle');
+            const currentYearSpan = document.getElementById('currentYear');
+            const sidebarMentorName = document.getElementById('sidebarMentorName');
+            const navbarMentorName = document.getElementById('navbarMentorName');
+            const welcomeMentorName = document.getElementById('welcomeMentorName');
+            const sidebarMentorPhoto = document.getElementById('sidebarMentorPhoto');
+            const navbarMentorPhoto = document.getElementById('navbarMentorPhoto');
+            const dashboardMentorPhoto = document.getElementById('dashboardMentorPhoto');
+            const totalMenteesCountEl = document.getElementById('totalMenteesCount');
+            const todaysMeetingsCountEl = document.getElementById('todaysMeetingsCount');
+            const openIssuesCountEl = document.getElementById('openIssuesCount');
+            const upcomingMeetingsList = document.getElementById('upcomingMeetingsList');
+            const dashboardOpenIssuesList = document.getElementById('dashboardOpenIssuesList');
+            const noOpenIssuesMsg = document.getElementById('noOpenIssuesMsg');
+            const menteeListContainer = document.getElementById('menteeListContainer');
+            const meetingsSectionList = document.getElementById('meetingsSectionList');
+            const issuesTableBody = document.getElementById('issuesTableBody');
+            const scheduleMenteeSelect = document.getElementById('scheduleMenteeName');
+            const reportMenteeSelect = document.getElementById('reportMenteeName');
+            const detailMenteeNotes = document.getElementById('detailMenteeNotes');
+            const notificationBadge = document.getElementById('notificationBadge');
+            const notificationList = document.getElementById('notificationList');
+            const toastContainer = document.querySelector('.toast-container');
+
+            // --- State Variables ---
+            let mentees = [];
+            let meetings = [];
+            let issues = [];
+            let currentIssueFilter = 'all';
+            let currentNotifications = [];
+
+            // --- API Configuration ---
+            // ** THIS IS THE CRITICAL LINE ** Make sure it's uncommented and correct.
+            const API_BASE_URL = 'http://localhost:8080/api';
+
+            const API_ENDPOINTS = {
+                mentees: `${API_BASE_URL}/mentees`,
+                meetings: `${API_BASE_URL}/meetings`,
+                issues: `${API_BASE_URL}/issues`,
+                notifications: `${API_BASE_URL}/notifications`,
+                logout: `${API_BASE_URL}/logout`
+                // Add other endpoints as needed
+            };
+            const AUTH_HEADER_NAME = 'X-User-ID';
+            const NOTIFICATION_POLL_INTERVAL = 60000; // 60 seconds
+
+            // --- Modal Instances ---
+            const addMenteeBootstrapModal = document.getElementById('addMenteeModal') ? new bootstrap.Modal('#addMenteeModal') : null;
+            const scheduleMeetingBootstrapModal = document.getElementById('scheduleMeetingModal') ? new bootstrap.Modal('#scheduleMeetingModal') : null;
+            const reportIssueBootstrapModal = document.getElementById('reportIssueModal') ? new bootstrap.Modal('#reportIssueModal') : null;
+            const respondIssueBootstrapModal = document.getElementById('respondIssueModal') ? new bootstrap.Modal('#respondIssueModal') : null;
+            const menteeDetailBootstrapModal = document.getElementById('menteeDetailModal') ? new bootstrap.Modal('#menteeDetailModal') : null;
+            const rescheduleMeetingBootstrapModal = document.getElementById('rescheduleMeetingModal') ? new bootstrap.Modal('#rescheduleMeetingModal') : null;
+            const deleteConfirmBootstrapModal = document.getElementById('deleteConfirmationModal') ? new bootstrap.Modal('#deleteConfirmationModal') : null;
+            const cancelMeetingBootstrapModal = document.getElementById('cancelMeetingConfirmationModal') ? new bootstrap.Modal('#cancelMeetingConfirmationModal') : null;
+
+            // --- Helper Functions (showToast, showLoading, showError, fetchData, formatDateTime, etc.) ---
+            // Ensure all helper functions provided previously are included here...
+
+             /**
+             * Shows a Bootstrap toast notification.
+             * @param {string} message - The message to display.
+             * @param {string} [type='info'] - The type ('info', 'success', 'danger', 'warning', 'secondary'). Determines background color.
+             */
+            const showToast = (message, type = 'info') => {
+                if (!toastContainer) return;
+                const toastId = 'toast-' + Date.now();
+                let bgColorClass = 'text-bg-secondary'; // Default
+                switch (type) {
+                    case 'success': bgColorClass = 'text-bg-success'; break;
+                    case 'danger': bgColorClass = 'text-bg-danger'; break;
+                    case 'warning': bgColorClass = 'text-bg-warning'; break;
+                    case 'info': bgColorClass = 'text-bg-info'; break;
+                }
+
+                const toastHTML = `
+                    <div id="${toastId}" class="toast align-items-center ${bgColorClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                ${message}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                `;
+                toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+                const toastElement = document.getElementById(toastId);
+                if (toastElement) {
+                    const toast = new bootstrap.Toast(toastElement, { delay: 5000 }); // 5 seconds
+                    toast.show();
+                    toastElement.addEventListener('hidden.bs.toast', () => {
+                        toastElement.remove();
+                    });
+                } else {
+                    console.error("Failed to find toast element after adding:", toastId);
+                }
+            };
+
+            /**
+             * Displays a loading indicator within a specified element.
+             * @param {HTMLElement} element - The container element.
+             * @param {string} [message='Loading...'] - The loading message.
+             */
+            const showLoading = (element, message = "Loading...") => {
+                 if(element) {
+                     element.innerHTML = `<div class="loading-placeholder p-3">${message} <span class="spinner-border spinner-border-sm ms-2"></span></div>`;
+                 }
+            };
+
+            /**
+             * Displays an error message within a specified element.
+             * @param {HTMLElement} element - The container element.
+             * @param {string} [message='Failed to load data.'] - The error message.
+             */
+            const showError = (element, message = "Failed to load data.") => {
+                 if(element) {
+                     element.innerHTML = `<div class="alert alert-warning" role="alert">${message}</div>`;
+                 }
+            };
+
+            /**
+             * Wrapper for the fetch API to handle common headers, errors, and JSON parsing.
+             * Automatically adds the auth header. Checks for 401 Unauthorized.
+             * @param {string} url - The API endpoint URL.
+             * @param {object} [options={}] - Fetch options (method, body, headers).
+             * @returns {Promise<any>} - A promise resolving with the parsed JSON data or null/text.
+             * @throws {Error} - Throws an error on network failure or non-OK HTTP status.
+             */
+            async function fetchData(url, options = {}) {
+                const currentUserId = sessionStorage.getItem('userId');
+                if (!currentUserId) {
+                    console.error("User ID not found in sessionStorage for API request.");
+                    showToast("Authentication error. Please login again.", "danger");
+                    throw new Error("User not authenticated");
+                }
+
+                const defaultHeaders = {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    [AUTH_HEADER_NAME]: currentUserId
+                };
+
+                const fetchOptions = { ...options, headers: { ...defaultHeaders, ...options.headers } };
+                
+                // Log the attempt - NOTE the typo "Workspaceing" comes from here in your logs
+                console.log(`Workspaceing ${url} with options:`, fetchOptions); 
+
+                try {
+                    const response = await fetch(url, fetchOptions);
+
+                    if (response.status === 401) {
+                        console.error("API Error: Unauthorized (401). Redirecting to login.");
+                        showToast("Session expired or unauthorized. Please login again.", "danger");
+                        sessionStorage.clear();
+                        window.location.href = 'login.html';
+                        throw new Error("Unauthorized");
+                    }
+
+                    if (!response.ok) {
+                        let errorBody = 'Unknown error';
+                        try {
+                            const errorData = await response.json();
+                            errorBody = errorData?.error || errorData?.message || JSON.stringify(errorData);
+                        } catch (e) { try { errorBody = await response.text(); } catch (e2) { /* ignore */ } }
+                        console.error(`API Error: ${response.status} ${response.statusText}. Body: ${errorBody}`);
+                        showToast(`Error: ${errorBody} (Status: ${response.status})`, 'danger');
+                        throw new Error(`HTTP error ${response.status}: ${errorBody}`);
+                    }
+
+                    if (response.status === 204) return null;
+
+                    try {
+                        const data = await response.json();
+                        return data;
+                    } catch (e) {
+                        console.error("Failed to parse JSON response:", e);
+                        showToast("Received invalid data from server.", "warning");
+                        throw new Error("Invalid JSON response");
+                    }
+                } catch (error) {
+                    console.error(`Workspace Error for ${url}:`, error);
+                    if (!(error.message.startsWith("HTTP error") || error.message === "Unauthorized")) {
+                        showToast(`Network error or server issue: ${error.message}`, 'danger');
+                    }
+                    throw error;
+                }
+            }
+
+            const getTodayDateString = () => new Date().toISOString().split('T')[0];
+
+            const formatDateTime = (dateStr, timeStr) => {
+                if (!dateStr || !timeStr) return { formattedDate: 'Invalid Date', formattedTime: '', dateObj: null };
+                const dateTimeString = `${dateStr}T${timeStr}`;
+                const dateObj = new Date(dateTimeString);
+                if (isNaN(dateObj.getTime())) {
+                    const fallbackDateObj = new Date(`${dateStr} ${timeStr}`);
+                    if(isNaN(fallbackDateObj.getTime())) return { formattedDate: 'Invalid Date', formattedTime: '', dateObj: null };
+                    dateObj.setTime(fallbackDateObj.getTime());
+                }
+                const optionsDate = { year: 'numeric', month: 'short', day: 'numeric' };
+                const optionsTime = { hour: 'numeric', minute: 'numeric', hour12: true };
+                const formattedDate = dateObj.toLocaleDateString(undefined, optionsDate);
+                const formattedTime = dateObj.toLocaleTimeString(undefined, optionsTime);
+                return { formattedDate, formattedTime, dateObj };
+            };
+
+            const calculateEndTime = (dateObj, durationMinutes) => {
+                 if (!dateObj || isNaN(dateObj.getTime())) return '';
+                 const duration = parseInt(durationMinutes, 10);
+                 if (isNaN(duration) || duration <= 0) return '';
+                 const endDateObj = new Date(dateObj.getTime() + duration * 60000);
+                 const optionsTime = { hour: 'numeric', minute: 'numeric', hour12: true };
+                 return ` - ${endDateObj.toLocaleTimeString(undefined, optionsTime)}`;
+            };
+
+            const populateMenteeSelects = () => {
+                if (!scheduleMenteeSelect || !reportMenteeSelect) return;
+                scheduleMenteeSelect.innerHTML = '<option value="" disabled selected>Select a mentee...</option>';
+                reportMenteeSelect.innerHTML = '<option value="" disabled selected>Select a mentee...</option>';
+                if (mentees.length === 0) {
+                    scheduleMenteeSelect.innerHTML = '<option value="" disabled selected>No mentees found</option>';
+                    reportMenteeSelect.innerHTML = '<option value="" disabled selected>No mentees found</option>';
+                    return;
+                }
+                const sortedMentees = [...mentees].sort((a, b) => a.name.localeCompare(b.name));
+                sortedMentees.forEach(mentee => {
+                    if (mentee && mentee.name && mentee.id) {
+                        const optionText = mentee.name;
+                        const optionValue = mentee.name;
+                        scheduleMenteeSelect.add(new Option(optionText, optionValue));
+                        reportMenteeSelect.add(new Option(optionText, optionValue));
+                    } else { console.warn("Skipping invalid mentee object:", mentee); }
+                });
+            };
+
+            const getPriorityInfo = (priority) => {
+                let badgeClass = 'bg-secondary';
+                switch (priority?.toLowerCase()) {
+                    case 'high': badgeClass = 'bg-danger'; break;
+                    case 'medium': badgeClass = 'bg-warning text-dark'; break;
+                    case 'low': badgeClass = 'bg-success'; break;
+                } return { badgeClass };
+            };
+
+            const getStatusInfo = (status) => {
+                let badgeClass = 'bg-secondary';
+                switch (status?.toLowerCase()) {
+                    case 'open': badgeClass = 'bg-danger'; break;
+                    case 'in progress': badgeClass = 'bg-warning text-dark'; break;
+                    case 'resolved': badgeClass = 'bg-success'; break;
+                } return { badgeClass };
+            };
+
+            const getAvatarColor = (name) => {
+                if (!name) return 'bg-secondary';
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) {
+                    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                    hash = hash & hash;
+                }
+                const colors = ['bg-primary', 'bg-secondary', 'bg-success', 'bg-danger', 'bg-warning text-dark', 'bg-info text-dark', 'bg-dark'];
+                const index = Math.abs(hash) % colors.length;
+                return colors[index];
+            };
+
+            const generatePlaceholderPhoto = (name, size = 90) => {
+                if (!name) return `https://via.placeholder.com/${size}/6c757d/ffffff?text=?`;
+                const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                const bgColor = getAvatarColor(name).replace('bg-', '').replace(' text-dark', '');
+                const textColor = 'ffffff';
+                return `https://via.placeholder.com/${size}/${bgColor}/${textColor}?text=${initials}`;
+            };
+
+             const updateMentorUI = (mentorName) => {
+                 const nameToShow = mentorName || "Mentor";
+                 const placeholderUrl = generatePlaceholderPhoto(mentorName, 90);
+                 const miniPlaceholderUrl = generatePlaceholderPhoto(mentorName, 30);
+                 if (sidebarMentorName) sidebarMentorName.textContent = nameToShow;
+                 if (navbarMentorName) navbarMentorName.textContent = nameToShow;
+                 if (welcomeMentorName) welcomeMentorName.textContent = nameToShow;
+                 if (sidebarMentorPhoto) sidebarMentorPhoto.src = placeholderUrl;
+                 if (navbarMentorPhoto) navbarMentorPhoto.src = miniPlaceholderUrl;
+                 if (dashboardMentorPhoto) dashboardMentorPhoto.src = placeholderUrl;
+             };
+
+            // --- Dashboard Stat Update Functions ---
+            const updateTotalMenteesCount = () => { if (totalMenteesCountEl) totalMenteesCountEl.textContent = mentees.length; };
+            const updateTodaysMeetingsCount = () => { if (!todaysMeetingsCountEl) return; const todayStr = getTodayDateString(); const count = meetings.filter(m => m.date === todayStr).length; todaysMeetingsCountEl.textContent = count; };
+            const updateOpenIssuesCount = () => { if (!openIssuesCountEl) return; const count = issues.filter(i => i.status?.toLowerCase() === 'open').length; openIssuesCountEl.textContent = count; };
+
+            // --- Data Rendering Functions ---
+            // Ensure all render functions (renderMenteeCards, renderMeetingsLists, etc.) are included here...
+
+             const renderMenteeCards = () => {
+                 if (!menteeListContainer) return;
+                 menteeListContainer.innerHTML = '';
+                 if (mentees.length === 0) { menteeListContainer.innerHTML = '<p class="text-muted col-12">No mentees found.</p>'; return; }
+                 const sortedMentees = [...mentees].sort((a, b) => a.name.localeCompare(b.name));
+                 sortedMentees.forEach(mentee => {
+                     const initials = mentee.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                     const avatarColor = getAvatarColor(mentee.name);
+                     const cardCol = document.createElement('div');
+                     cardCol.className = 'col';
+                     cardCol.innerHTML = `
+                         <div class="card h-100 mentee-card"> <div class="card-body d-flex align-items-start">
+                                
+                                 <div class="flex-grow-1"> <h5 class="card-title mb-1">${mentee.name}</h5> <p class="card-text text-muted small mb-2">${mentee.subject || 'No subject'}</p>
+                                     <div class="btn-group btn-group-sm" role="group"> <button type="button" class="btn btn-outline-primary view-details" data-mentee-id="${mentee.id}"><i class="fas fa-eye me-1"></i> Details</button> <button type="button" class="btn btn-outline-info schedule-meeting-btn" data-mentee-name="${mentee.name}"><i class="fas fa-calendar-plus me-1"></i> Schedule</button> <button type="button" class="btn btn-outline-danger delete-mentee-btn" data-mentee-id="${mentee.id}" data-mentee-name="${mentee.name}"><i class="fas fa-trash-alt me-1"></i> Delete</button> </div>
+                                 </div> </div> </div>`;
+                     menteeListContainer.appendChild(cardCol);
+                 });
+             };
+
+             const renderMeetingsLists = () => {
+                 if (!upcomingMeetingsList || !meetingsSectionList) return;
+                 const now = new Date();
+                 upcomingMeetingsList.innerHTML = ''; meetingsSectionList.innerHTML = '';
+                 if (meetings.length === 0) { showError(upcomingMeetingsList, "No upcoming meetings."); showError(meetingsSectionList, "No meetings scheduled."); return; }
+                 const sortedMeetings = [...meetings].sort((a, b) => { const dateA = new Date(`${a.date}T${a.time}`); const dateB = new Date(`${b.date}T${b.time}`); return dateA - dateB; });
+                 let upcomingCount = 0;
+                 sortedMeetings.forEach(meeting => {
+                     const { formattedDate, formattedTime, dateObj } = formatDateTime(meeting.date, meeting.time);
+                     if (!dateObj) return;
+                     const endTimeStr = calculateEndTime(dateObj, meeting.duration);
+                     const isUpcoming = dateObj >= now; const isPast = dateObj < now;
+                     const meetingItemHTML = `<div class="list-group-item list-group-item-action ${isPast ? 'opacity-75' : ''}"> <div class="d-flex w-100 justify-content-between align-items-center"> <h6 class="mb-1">${meeting.mentee || meeting.mentee_name || 'Unknown Mentee'}</h6> <small class="text-muted">${formattedDate}</small> </div> <p class="mb-1"><i class="fas fa-clock me-2 text-muted"></i>${formattedTime}${endTimeStr} (${meeting.duration || '?'} min)</p> ${meeting.notes ? `<p class="mb-1 small text-muted fst-italic">Notes: ${meeting.notes}</p>` : ''} <div class="mt-2"> <button class="btn btn-sm btn-outline-warning reschedule-meeting-btn" data-meeting-id="${meeting.id}" data-mentee="${meeting.mentee || meeting.mentee_name || '?'}" data-datetime="${meeting.date}T${meeting.time}"><i class="fas fa-edit me-1"></i> Reschedule</button> <button class="btn btn-sm btn-outline-danger cancel-meeting-btn" data-meeting-id="${meeting.id}" data-mentee="${meeting.mentee || meeting.mentee_name || '?'}" data-datetime-str="${formattedDate} at ${formattedTime}"><i class="fas fa-times-circle me-1"></i> Cancel</button> </div> </div>`;
+                     meetingsSectionList.insertAdjacentHTML('beforeend', meetingItemHTML);
+                     if (isUpcoming && upcomingCount < 5) { upcomingMeetingsList.insertAdjacentHTML('beforeend', meetingItemHTML); upcomingCount++; }
+                 });
+                 if (upcomingCount === 0) showError(upcomingMeetingsList, "No upcoming meetings scheduled.");
+                 if(meetingsSectionList.innerHTML === '') showError(meetingsSectionList, "No meetings scheduled yet.");
+             };
+
+             const renderIssuesTable = (filter = 'all') => {
+                 if (!issuesTableBody) return;
+                 issuesTableBody.innerHTML = '';
+                 const filteredIssues = issues.filter(issue => filter === 'all' || issue.status?.toLowerCase() === filter?.toLowerCase());
+                 if (filteredIssues.length === 0) { issuesTableBody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No issues found matching the filter "${filter}".</td></tr>`; return; }
+                 const sortedIssues = filteredIssues.sort((a, b) => { const statusOrder = { 'open': 1, 'in progress': 2, 'resolved': 3 }; const statusA = statusOrder[a.status?.toLowerCase()] || 4; const statusB = statusOrder[b.status?.toLowerCase()] || 4; if (statusA !== statusB) return statusA - statusB; const dateA = new Date(a.date || 0); const dateB = new Date(b.date || 0); return dateB - dateA; });
+                 sortedIssues.forEach(issue => {
+                     const { formattedDate } = formatDateTime(issue.date, '00:00');
+                     const priorityInfo = getPriorityInfo(issue.priority); const statusInfo = getStatusInfo(issue.status);
+                     const row = document.createElement('tr');
+                     row.innerHTML = `<td>${issue.mentee || issue.mentee_name || 'N/A'}</td> <td>${issue.description || 'N/A'}</td> <td>${formattedDate}</td> <td><span class="badge ${priorityInfo.badgeClass}">${issue.priority || 'N/A'}</span></td> <td><span class="badge ${statusInfo.badgeClass}">${issue.status || 'N/A'}</span></td> <td><button class="btn btn-sm btn-primary respond-issue" data-issue-id="${issue.id}"><i class="fas fa-reply me-1"></i> Respond</button></td>`;
+                     issuesTableBody.appendChild(row);
+                 });
+             };
+
+            const renderDashboardIssues = () => {
+                 if (!dashboardOpenIssuesList) return;
+                 dashboardOpenIssuesList.innerHTML = '';
+                 const openOrProgressIssues = issues.filter(issue => issue.status?.toLowerCase() === 'open' || issue.status?.toLowerCase() === 'in progress').sort((a, b) => { const dateA = new Date(a.date || 0); const dateB = new Date(b.date || 0); return dateB - dateA; });
+                 if (openOrProgressIssues.length === 0) { if (noOpenIssuesMsg) noOpenIssuesMsg.style.display = 'block'; return; }
+                 if (noOpenIssuesMsg) noOpenIssuesMsg.style.display = 'none';
+                 const issuesToDisplay = openOrProgressIssues.slice(0, 3);
+                 issuesToDisplay.forEach(issue => {
+                     const { formattedDate } = formatDateTime(issue.date, '00:00');
+                     const statusInfo = getStatusInfo(issue.status); const priorityInfo = getPriorityInfo(issue.priority);
+                     const issueItemHTML = `<a href="#" class="list-group-item list-group-item-action respond-issue" data-issue-id="${issue.id}"> <div class="d-flex w-100 justify-content-between"> <h6 class="mb-1">${issue.mentee || issue.mentee_name || 'Unknown Mentee'}</h6> <small class="text-muted">${formattedDate}</small> </div> <p class="mb-1">${issue.description || 'No description'}</p> <small><span class="badge ${statusInfo.badgeClass}">${issue.status || 'N/A'}</span> <span class="badge ${priorityInfo.badgeClass} ms-1">${issue.priority || 'N/A'}</span></small> </a>`;
+                     dashboardOpenIssuesList.insertAdjacentHTML('beforeend', issueItemHTML);
+                 });
+            };
+
+            function renderNotifications() {
+                if (!notificationList || !notificationBadge) return;
+                notificationList.innerHTML = '';
+                if (currentNotifications.length === 0) { notificationList.innerHTML = '<li><p class="dropdown-item text-muted mb-0 small">No new notifications.</p></li>'; notificationBadge.textContent = '0'; notificationBadge.style.display = 'none'; return; }
+                currentNotifications.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                notificationBadge.textContent = currentNotifications.length; notificationBadge.style.display = 'inline-block';
+                currentNotifications.forEach(notif => {
+                    const date = new Date((notif.timestamp || 0) * 1000); const timeAgo = formatTimeAgo(date);
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a class="dropdown-item text-wrap" href="#"> <div class="small">${notif.text || 'Notification text missing.'}</div> <div class="text-muted small">${timeAgo}</div> </a>`;
+                    notificationList.appendChild(li);
+                });
+                 notificationList.insertAdjacentHTML('beforeend', '<li><hr class="dropdown-divider"></li><li><a class="dropdown-item text-center text-muted small" href="#">View all notifications</a></li>');
+            }
+            function formatTimeAgo(date) { const seconds = Math.floor((new Date() - date) / 1000); let interval = seconds / 31536000; if (interval > 1) return Math.floor(interval) + " years ago"; interval = seconds / 2592000; if (interval > 1) return Math.floor(interval) + " months ago"; interval = seconds / 86400; if (interval > 1) return Math.floor(interval) + " days ago"; interval = seconds / 3600; if (interval > 1) return Math.floor(interval) + " hours ago"; interval = seconds / 60; if (interval > 1) return Math.floor(interval) + " minutes ago"; return Math.floor(seconds) + " seconds ago"; }
+
+            // --- Data Fetching Logic ---
+            // Ensure all fetch functions (fetchMentees, fetchMeetings, etc.) are included here...
+            async function fetchMentees() { console.log("Fetching mentees..."); if (menteeListContainer) showLoading(menteeListContainer, "Loading mentees..."); try { const data = await fetchData(API_ENDPOINTS.mentees); mentees = Array.isArray(data) ? data : []; console.log("Mentees fetched:", mentees); renderMenteeCards(); populateMenteeSelects(); updateTotalMenteesCount(); } catch (error) { console.error("Failed to fetch mentees:", error); if (menteeListContainer) showError(menteeListContainer, "Could not load mentees."); updateTotalMenteesCount(); } }
+            async function fetchMeetings() { console.log("Fetching meetings..."); if (upcomingMeetingsList) showLoading(upcomingMeetingsList); if (meetingsSectionList) showLoading(meetingsSectionList); try { const data = await fetchData(API_ENDPOINTS.meetings); meetings = Array.isArray(data) ? data : []; console.log("Meetings fetched:", meetings); renderMeetingsLists(); updateTodaysMeetingsCount(); } catch (error) { console.error("Failed to fetch meetings:", error); if (upcomingMeetingsList) showError(upcomingMeetingsList, "Could not load meetings."); if (meetingsSectionList) showError(meetingsSectionList, "Could not load meetings."); updateTodaysMeetingsCount(); } }
+            async function fetchIssues() { console.log("Fetching issues..."); if(issuesTableBody) issuesTableBody.innerHTML = `<tr><td colspan="6" class="loading-placeholder p-3">Loading issues... <span class="spinner-border spinner-border-sm ms-2"></span></td></tr>`; if(dashboardOpenIssuesList) showLoading(dashboardOpenIssuesList); try { const data = await fetchData(API_ENDPOINTS.issues); issues = Array.isArray(data) ? data : []; console.log("Issues fetched:", issues); renderIssuesTable(currentIssueFilter); renderDashboardIssues(); updateOpenIssuesCount(); } catch (error) { console.error("Failed to fetch issues:", error); if (issuesTableBody) issuesTableBody.innerHTML = `<tr><td colspan="6" class="alert alert-warning">Could not load issues.</td></tr>`; if (dashboardOpenIssuesList) showError(dashboardOpenIssuesList, "Could not load issues."); updateOpenIssuesCount(); } }
+             async function fetchNotifications() { console.log("Polling for notifications..."); try { const data = await fetchData(API_ENDPOINTS.notifications); currentNotifications = Array.isArray(data) ? data : []; console.log("Notifications fetched:", currentNotifications); renderNotifications(); } catch (error) { if (error.message !== "Unauthorized") { console.error("Failed to fetch notifications:", error); } } }
+            async function fetchAllInitialData() { console.log("Fetching all initial data..."); try { await Promise.all([ fetchMentees(), fetchMeetings(), fetchIssues(), fetchNotifications() ]); console.log("Initial data fetch complete."); } catch (error) { console.error("Error during initial data fetch:", error); /* Optionally show a general error on the page */ } }
+
+            // --- Form Submission & Action Handlers ---
+            // Ensure all form handlers (addMenteeForm submit, etc.) are included here...
+
+            const addMenteeForm = document.getElementById('addMenteeForm');
+            if (addMenteeForm) addMenteeForm.addEventListener('submit', async function (e) { e.preventDefault(); const name = document.getElementById('newMenteeName').value.trim(); const subject = document.getElementById('newMenteeSubject').value.trim(); const email = document.getElementById('newMenteeEmail').value.trim(); const submitButton = this.querySelector('button[type="submit"]'); if (!name || !subject) { showToast("Mentee Name and Subject are required.", "warning"); return; } const menteeData = { name, subject, email }; submitButton.disabled = true; submitButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Adding...'; try { const newMentee = await fetchData(API_ENDPOINTS.mentees, { method: 'POST', body: JSON.stringify(menteeData) }); showToast(`Mentee '${newMentee.name}' added successfully!`, 'success'); addMenteeForm.reset(); if(addMenteeBootstrapModal) addMenteeBootstrapModal.hide(); await fetchMentees(); } catch (error) { console.error("Error adding mentee:", error); } finally { submitButton.disabled = false; submitButton.innerHTML = 'Add Mentee'; } });
+            const scheduleMeetingForm = document.getElementById('scheduleMeetingForm');
+            if (scheduleMeetingForm) scheduleMeetingForm.addEventListener('submit', async function (e) { e.preventDefault(); const menteeName = scheduleMenteeSelect.value; const date = document.getElementById('scheduleDate').value; const time = document.getElementById('scheduleTime').value; const duration = document.getElementById('scheduleDuration').value; const notes = document.getElementById('scheduleNotes').value.trim(); const submitButton = this.querySelector('button[type="submit"]'); if (!menteeName || !date || !time || !duration) { showToast("Please select mentee, date, time, and duration.", "warning"); return; } const meetingData = { mentee: menteeName, date, time, duration: parseInt(duration), notes }; submitButton.disabled = true; submitButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Scheduling...'; try { const newMeeting = await fetchData(API_ENDPOINTS.meetings, { method: 'POST', body: JSON.stringify(meetingData) }); showToast(`Meeting with ${newMeeting.mentee} scheduled successfully!`, 'success'); scheduleMeetingForm.reset(); if(scheduleMeetingBootstrapModal) scheduleMeetingBootstrapModal.hide(); await fetchMeetings(); } catch (error) { console.error("Error scheduling meeting:", error); } finally { submitButton.disabled = false; submitButton.innerHTML = 'Schedule Meeting'; } });
+            const reportIssueForm = document.getElementById('reportIssueForm');
+            if(reportIssueForm) reportIssueForm.addEventListener('submit', async function(e) { e.preventDefault(); const menteeName = reportMenteeSelect.value; const description = document.getElementById('reportIssueDescription').value.trim(); const priority = document.getElementById('reportPriority').value; const submitButton = this.querySelector('button[type="submit"]'); if (!menteeName || !description) { showToast("Please select a mentee and provide an issue description.", "warning"); return; } const issueData = { mentee: menteeName, description, priority, date: getTodayDateString() }; submitButton.disabled = true; submitButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Reporting...'; try { const newIssue = await fetchData(API_ENDPOINTS.issues, { method: 'POST', body: JSON.stringify(issueData) }); showToast(`Issue for ${newIssue.mentee} reported successfully!`, 'success'); reportIssueForm.reset(); if(reportIssueBootstrapModal) reportIssueBootstrapModal.hide(); await fetchIssues(); } catch (error) { console.error("Error reporting issue:", error); } finally { submitButton.disabled = false; submitButton.innerHTML = 'Report Issue'; } });
+            const respondIssueForm = document.getElementById('respondIssueForm');
+            if(respondIssueForm) respondIssueForm.addEventListener('submit', async function(e) { e.preventDefault(); const issueId = document.getElementById('respondIssueId').value; const newStatus = document.getElementById('respondStatusUpdate').value; const notes = document.getElementById('respondNotes').value.trim(); const submitButton = this.querySelector('button[type="submit"]'); if (!issueId || !newStatus) { showToast("Error identifying issue or status.", "danger"); return; } const updateData = { status: newStatus, notes: notes }; submitButton.disabled = true; submitButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Updating...'; try { const updatedIssue = await fetchData(`${API_ENDPOINTS.issues}/${issueId}`, { method: 'PATCH', body: JSON.stringify(updateData) }); showToast(`Issue #${updatedIssue.id} updated successfully!`, 'success'); respondIssueForm.reset(); if(respondIssueBootstrapModal) respondIssueBootstrapModal.hide(); await fetchIssues(); } catch (error) { console.error(`Error updating issue ${issueId}:`, error); } finally { submitButton.disabled = false; submitButton.innerHTML = 'Update Issue'; } });
+            const rescheduleMeetingForm = document.getElementById('rescheduleMeetingForm');
+            if (rescheduleMeetingForm) rescheduleMeetingForm.addEventListener('submit', async function(e) { e.preventDefault(); const meetingId = document.getElementById('rescheduleMeetingId').value; const newDate = document.getElementById('rescheduleDate').value; const newTime = document.getElementById('rescheduleTime').value; const submitButton = this.querySelector('button[type="submit"]'); if (!meetingId || !newDate || !newTime) { showToast("Error identifying meeting or new date/time.", "danger"); return; } const updateData = { date: newDate, time: newTime }; submitButton.disabled = true; submitButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Rescheduling...'; try { const updatedMeeting = await fetchData(`${API_ENDPOINTS.meetings}/${meetingId}`, { method: 'PATCH', body: JSON.stringify(updateData) }); showToast(`Meeting #${updatedMeeting.id} rescheduled successfully!`, 'success'); rescheduleMeetingForm.reset(); if(rescheduleMeetingBootstrapModal) rescheduleMeetingBootstrapModal.hide(); await fetchMeetings(); } catch (error) { console.error(`Error rescheduling meeting ${meetingId}:`, error); } finally { submitButton.disabled = false; submitButton.innerHTML = 'Reschedule'; } });
+            const confirmDeleteMenteeBtn = document.getElementById('confirmDeleteMenteeBtn');
+            if (confirmDeleteMenteeBtn) confirmDeleteMenteeBtn.addEventListener('click', async function() { const menteeId = this.getAttribute('data-mentee-id'); const menteeName = document.getElementById('deleteMenteeNameConfirm').textContent; if (!menteeId) { showToast("Cannot identify mentee to delete.", "danger"); return; } const originalButtonText = this.innerHTML; this.disabled = true; this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Deleting...'; try { await fetchData(`${API_ENDPOINTS.mentees}/${menteeId}`, { method: 'DELETE' }); showToast(`Mentee '${menteeName}' deleted successfully.`, 'success'); if(deleteConfirmBootstrapModal) deleteConfirmBootstrapModal.hide(); await fetchMentees(); await fetchMeetings(); await fetchIssues(); } catch (error) { console.error(`Error deleting mentee ${menteeId}:`, error); } finally { this.disabled = false; this.innerHTML = originalButtonText; } });
+            const confirmCancelMeetingBtn = document.getElementById('confirmCancelMeetingBtn');
+            if (confirmCancelMeetingBtn) confirmCancelMeetingBtn.addEventListener('click', async function() { const meetingId = this.getAttribute('data-meeting-id'); if (!meetingId) { showToast("Cannot identify meeting to cancel.", "danger"); return; } const originalButtonText = this.innerHTML; this.disabled = true; this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Cancelling...'; try { await fetchData(`${API_ENDPOINTS.meetings}/${meetingId}`, { method: 'DELETE' }); showToast(`Meeting #${meetingId} cancelled successfully.`, 'success'); if(cancelMeetingBootstrapModal) cancelMeetingBootstrapModal.hide(); await fetchMeetings(); } catch (error) { console.error(`Error cancelling meeting ${meetingId}:`, error); } finally { this.disabled = false; this.innerHTML = originalButtonText; } });
+
+            // --- Event Delegation & Modal Population ---
+            document.addEventListener('click', async function (e) {
+                const respondBtn = e.target.closest('.respond-issue'); if(respondBtn && respondIssueBootstrapModal){ const id = respondBtn.getAttribute('data-issue-id'); const issue = issues.find(i=>String(i?.id)===id); if(issue){ document.getElementById('respondMenteeName').textContent = issue.mentee||issue.mentee_name||'?'; document.getElementById('respondIssueDescription').textContent=issue.description||'N/A'; document.getElementById('respondStatusUpdate').value=issue.status||'Open'; document.getElementById('respondIssueId').value=id; document.getElementById('respondNotes').value=''; respondIssueBootstrapModal.show(); } else showToast('Cannot load issue details.','warning'); }
+                const viewBtn = e.target.closest('.view-details'); if(viewBtn && menteeDetailBootstrapModal){ const id = viewBtn.getAttribute('data-mentee-id'); const mentee = mentees.find(m=>String(m?.id)===id); if(mentee && detailMenteeNotes){ document.getElementById('detailMenteeName').textContent=mentee.name||'?'; document.getElementById('detailMenteeSubject').textContent=mentee.subject||'N/A'; document.getElementById('detailMenteeContact').textContent=mentee.email||'N/A'; detailMenteeNotes.innerHTML=''; const notes = mentee.general_notes || []; if(notes.length>0){ notes.sort((a,b)=>(b?.timestamp||0)-(a?.timestamp||0)).forEach(n=>{ const d=n?.timestamp?new Date(n.timestamp*1000).toLocaleString():'?'; const li=document.createElement('li'); li.className='list-group-item'; li.innerHTML=`${n?.text||'N/A'} <small class="text-muted d-block">${d}</small>`; detailMenteeNotes.appendChild(li); }); } else detailMenteeNotes.innerHTML='<li class="list-group-item text-muted">No notes recorded.</li>'; menteeDetailBootstrapModal.show(); } else showToast('Cannot load mentee details.','warning'); }
+                const rescheduleBtn = e.target.closest('.reschedule-meeting-btn'); if(rescheduleBtn && rescheduleMeetingBootstrapModal){ const id = rescheduleBtn.getAttribute('data-meeting-id'); const name = rescheduleBtn.getAttribute('data-mentee'); const dtAttr = rescheduleBtn.getAttribute('data-datetime'); const m = meetings.find(m=>String(m?.id)===id); if(m && dtAttr?.includes('T')){ const [d,t]=dtAttr.split('T'); const {formattedDate:fd, formattedTime:ft}=formatDateTime(d,t); document.getElementById('rescheduleMeetingId').value=id; document.getElementById('rescheduleMenteeName').textContent=name; document.getElementById('rescheduleCurrentTime').textContent=`${fd} at ${ft}`; document.getElementById('rescheduleDate').value=d; document.getElementById('rescheduleTime').value=t.substring(0,5); document.getElementById('rescheduleReason').value=''; rescheduleMeetingBootstrapModal.show(); } else showToast('Cannot load meeting details.','warning'); }
+                const scheduleBtn = e.target.closest('.schedule-meeting-btn'); if(scheduleBtn && scheduleMeetingBootstrapModal){ const name = scheduleBtn.getAttribute('data-mentee-name'); if(scheduleMenteeSelect) scheduleMenteeSelect.value=name; document.getElementById('scheduleDate').valueAsDate=new Date(); document.getElementById('scheduleTime').value=''; document.getElementById('scheduleDuration').value='30'; document.getElementById('scheduleNotes').value=''; scheduleMeetingBootstrapModal.show(); }
+                 const cancelBtn = e.target.closest('.cancel-meeting-btn'); if(cancelBtn && cancelMeetingBootstrapModal){ const id = cancelBtn.getAttribute('data-meeting-id'); const name = cancelBtn.getAttribute('data-mentee'); const dtStr = cancelBtn.getAttribute('data-datetime-str'); document.getElementById('cancelMeetingMenteeNameConfirm').textContent=name||'?'; document.getElementById('cancelMeetingDateTimeConfirm').textContent=dtStr||'?'; document.getElementById('confirmCancelMeetingBtn').setAttribute('data-meeting-id',id); cancelMeetingBootstrapModal.show(); }
+                 const deleteBtn = e.target.closest('.delete-mentee-btn'); if(deleteBtn && deleteConfirmBootstrapModal){ const id = deleteBtn.getAttribute('data-mentee-id'); const name = deleteBtn.getAttribute('data-mentee-name'); document.getElementById('deleteMenteeNameConfirm').textContent=name||'?'; document.getElementById('confirmDeleteMenteeBtn').setAttribute('data-mentee-id',id); deleteConfirmBootstrapModal.show(); }
+                 const sectionTarget = e.target.closest('[data-section-target]'); if(sectionTarget){ e.preventDefault(); activateSection(sectionTarget.getAttribute('data-section-target')); }
+            });
+
+            // --- Issue Filter Logic ---
+            const issueStatusFilter = document.getElementById('issueStatusFilter');
+            if (issueStatusFilter) issueStatusFilter.addEventListener('change', function (e) { if (e.target.matches('input[type="radio"]')) { currentIssueFilter = e.target.getAttribute('data-filter'); console.log("Issue filter changed:", currentIssueFilter); renderIssuesTable(currentIssueFilter); } });
+
+            // --- Navigation & Section Display Logic ---
+            const activateSection = (sectionId) => {
+                 if (!sectionId) sectionId = 'dashboard'; let sectionActivated = false;
+                 sections.forEach(section => { if (section.id === sectionId) { section.classList.add('active'); sectionActivated = true; } else { section.classList.remove('active'); } });
+                 if (!sectionActivated) { console.warn(`Section ${sectionId} not found, defaulting.`); document.getElementById('dashboard')?.classList.add('active'); sectionId = 'dashboard'; }
+                 const activeLink = document.querySelector(`.sidebar .nav-link[data-section="${sectionId}"]`); if (pageTitle) pageTitle.textContent = activeLink ? activeLink.textContent.trim() : 'Dashboard';
+                 navLinks.forEach(link => { if (link.getAttribute('data-section') === sectionId) link.classList.add('active'); else link.classList.remove('active'); }); console.log(`Activated section: ${sectionId}`);
+             };
+             navLinks.forEach(link => { link.addEventListener('click', function (e) { e.preventDefault(); const sectionId = this.getAttribute('data-section'); if (sectionId) activateSection(sectionId); }); });
+
+            // --- Logout Handler ---
+            async function handleLogout(e) {
+                e.preventDefault(); console.log("Logout initiated...");
+                try { /* Optional: await fetchData(API_ENDPOINTS.logout, { method: 'POST' }); */ console.log("Logout successful (frontend)."); }
+                catch (error) { console.error("Error calling backend logout:", error); }
+                finally { sessionStorage.clear(); window.location.href = 'login.html'; }
+            };
+            document.querySelectorAll('#logoutLinkSidebar, #logoutLinkDropdown').forEach(link => { link.addEventListener('click', handleLogout); });
+
+             // --- Initial Page Load ---
+             if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
+             updateMentorUI(userName);
+             activateSection('dashboard'); // Ensure default section is shown
+             fetchAllInitialData(); // Fetch initial data
+             setInterval(fetchNotifications, NOTIFICATION_POLL_INTERVAL); // Start polling
+
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>
