@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "mentorship_data.h": "c",
+        "stdlib.h": "c"
+    }
+}

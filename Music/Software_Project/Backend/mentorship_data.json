@@ -1,0 +1,69 @@
+{
+	"next_mentee_id":	5,
+	"next_meeting_id":	5,
+	"next_issue_id":	2,
+	"next_user_id":	5,
+	"mentees":	[{
+			"id":	2,
+			"name":	"Pranav",
+			"subject":	"Mathematics",
+			"email":	"",
+			"general_notes":	[]
+		}, {
+			"id":	3,
+			"name":	"Praghathish",
+			"subject":	"Chemistry",
+			"email":	"",
+			"general_notes":	[]
+		}, {
+			"id":	4,
+			"name":	"Sample Mentee",
+			"subject":	"Sample Subject",
+			"email":	"xyz@gmail.com",
+			"general_notes":	[]
+		}],
+	"meetings":	[{
+			"id":	4,
+			"mentee_id":	3,
+			"mentee":	"Praghathish",
+			"date":	"2025-05-08",
+			"time":	"19:30",
+			"duration":	30,
+			"notes":	""
+		}],
+	"issues":	[{
+			"id":	1,
+			"mentee_id":	4,
+			"mentee":	"Sample Mentee",
+			"description":	"Sample Issue",
+			"date":	"2025-04-28",
+			"priority":	"High",
+			"status":	"Open",
+			"notes":	[]
+		}],
+	"users":	[{
+			"id":	4,
+			"username":	"praghathish",
+			"password":	"password",
+			"role":	"mentee",
+			"associated_id":	3
+		}, {
+			"id":	3,
+			"username":	"pranav",
+			"password":	"password",
+			"role":	"mentee",
+			"associated_id":	2
+		}, {
+			"id":	2,
+			"username":	"user",
+			"password":	"password",
+			"role":	"mentee",
+			"associated_id":	1
+		}, {
+			"id":	1,
+			"username":	"davis",
+			"password":	"password",
+			"role":	"mentor",
+			"associated_id":	0
+		}]
+}

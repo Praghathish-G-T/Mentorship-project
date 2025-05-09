@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentee Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="dashboardWrapper" class="d-flex" style="visibility: hidden;"> <aside class="sidebar">
+            <div class="sidebar-header">
+                 
+                 <h5 id="sidebarMenteeName">Loading...</h5><p class="text-muted small">Mentee</p>
+             </div>
+             <nav>
+                 <ul class="nav flex-column flex-grow-1">
+                     <li class="nav-item"><a class="nav-link active" href="#" data-section="dashboard"><i class="fas fa-home fa-fw"></i> Dashboard</a></li>
+                     <li class="nav-item"><a class="nav-link" href="#" data-section="my-meetings"><i class="fas fa-calendar-alt fa-fw"></i> My Meetings</a></li>
+                     <li class="nav-item"><a class="nav-link" href="#" data-section="my-issues"><i class="fas fa-exclamation-triangle fa-fw"></i> My Issues</a></li>
+                     <li class="nav-item"><a class="nav-link" href="#" data-section="my-mentor"><i class="fas fa-user-tie fa-fw"></i> My Mentor</a></li>
+                     <li class="nav-item"><a class="nav-link" href="#" data-section="my-notes"><i class="fas fa-sticky-note fa-fw"></i> Notes</a></li>
+                     </ul>
+             </nav>
+             <ul class="nav flex-column mt-auto">
+                  <li class="nav-item"><a class="nav-link" href="#" id="logoutLinkSidebar"><i class="fas fa-sign-out-alt fa-fw"></i> Logout</a></li>
+             </ul>
+        </aside>
+
+        <main class="main-content">
+            <nav class="navbar navbar-expand-lg main-navbar">
+                 <div class="container-fluid">
+                      <h4 id="pageTitle" class="mb-0">Mentee Dashboard</h4>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                         <ul class="navbar-nav ms-auto align-items-center">
+                             <li class="nav-item dropdown">
+                                 <a class="nav-link" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Toggle Notifications">
+                                    <i class="fas fa-bell fa-lg"></i>
+                                    <span id="notificationBadge" class="badge rounded-pill bg-danger notification-badge" style="display: none;">0</span>
+                                 </a>
+                                 <ul id="notificationList" class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                                     <li><p class="dropdown-item text-muted mb-0 small">Loading...</p></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-center text-muted small" href="#">View all notifications</a></li>
+                                 </ul>
+                             </li>
+                             <li class="nav-item dropdown">
+                                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    
+                                    <span id="navbarMenteeName">Loading...</span>
+                                 </a>
+                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                                     <li><a class="dropdown-item" href="#" id="logoutLinkDropdown"><i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout</a></li>
+                                 </ul>
+                             </li>
+                         </ul>
+                     </div>
+                </div>
+            </nav>
+
+             <section id="dashboard" class="dashboard-section active">
+                  <div class="card welcome-block bg-light border-0 mb-4">
+                     <div class="card-body text-center">
+                       
+                        <h4 class="card-title">Welcome, <span id="welcomeMenteeName">Mentee</span>!</h4>
+                        <p class="card-text text-muted">Here's your mentorship overview.</p>
+                     </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                        <div class="card text-center text-bg-info mb-3 stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <i class="fas fa-calendar-check fa-2x"></i>
+                                    <div class="text-end">
+                                        <div class="display-6" id="upcomingMeetingsCount">-</div>
+                                        <div class="small">Upcoming Meetings</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card text-center text-bg-danger mb-3 stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                                    <div class="text-end">
+                                        <div class="display-6" id="myOpenIssuesCount">-</div>
+                                        <div class="small">My Open Issues</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">My Upcoming Meetings</h5>
+                                <a href="#" class="btn btn-sm btn-outline-secondary" data-section-target="my-meetings"><i class="fas fa-external-link-alt me-1"></i> View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group list-group-flush" id="menteeUpcomingMeetingsList">
+                                    <div class="loading-placeholder p-3">Loading meetings... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">My Open Issues</h5>
+                                <a href="#" class="btn btn-sm btn-outline-secondary" data-section-target="my-issues"><i class="fas fa-external-link-alt me-1"></i> View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group list-group-flush" id="menteeOpenIssuesList">
+                                    <div class="loading-placeholder p-3">Loading issues... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                                </div>
+                                <p class="text-muted text-center px-3 small mt-2" id="menteeNoOpenIssuesMsg" style="display: none;">You have no open issues.</p>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="row mt-0"> <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">My Mentor</h5>
+                                <a href="#" class="btn btn-sm btn-outline-secondary" data-section-target="my-mentor"><i class="fas fa-external-link-alt me-1"></i> View Profile</a>
+                            </div>
+                            <div class="card-body" id="mentorDetailsSection">
+                                <div class="loading-placeholder p-3">Loading mentor details... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+             </section>
+
+             <section id="my-meetings" class="dashboard-section">
+                 <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">My Meetings</h4>
+                    </div>
+                 <div class="card">
+                    <div class="card-body" id="fullMeetingList">
+                         <div class="loading-placeholder p-3">Loading all meetings... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                    </div>
+                </div>
+            </section>
+
+             <section id="my-issues" class="dashboard-section">
+                 <div class="d-flex justify-content-between align-items-center mb-3">
+                     <h4 class="mb-0">My Issues</h4>
+                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#menteeReportIssueModal">
+                         <i class="fas fa-flag me-1"></i> Report New Issue
+                     </button>
+                 </div>
+                 <div class="card">
+                    <div class="card-body" id="fullIssueList">
+                         <div class="loading-placeholder p-3">Loading all issues... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                    </div>
+                </div>
+            </section>
+
+             <section id="my-mentor" class="dashboard-section">
+                 <h4 class="mb-3">My Mentor</h4>
+                 <div class="card">
+                    <div class="card-body" id="fullMentorProfile">
+                        <div class="loading-placeholder p-3">Loading mentor profile... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                    </div>
+                </div>
+            </section>
+
+             <section id="my-notes" class="dashboard-section">
+                 <h4 class="mb-3">Notes From Mentor</h4>
+                 <div class="card">
+                    <div class="card-body" id="mentorNotesList">
+                        <div class="loading-placeholder p-3">Loading notes... <span class="spinner-border spinner-border-sm ms-2"></span></div>
+                    </div>
+                </div>
+            </section>
+
+             <footer class="mt-4">
+                <small>&copy; <span id="currentYear"></span> Mentee Dashboard. All Rights Reserved.</small>
+            </footer>
+
+        </main>
+    </div> <div class="modal fade" id="menteeReportIssueModal" tabindex="-1" aria-labelledby="menteeReportIssueModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="menteeReportIssueForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="menteeReportIssueModalLabel">Report New Issue</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="menteeIssueDescription" class="form-label">Issue Description</label>
+                            <textarea class="form-control" id="menteeIssueDescription" rows="4" required placeholder="Please describe the issue or question you have..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                             <label for="menteeIssuePriority" class="form-label">Priority</label>
+                             <select class="form-select" id="menteeIssuePriority" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                             </select>
+                             <small class="text-muted">How urgent is this issue for you?</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Report Issue</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /**
+         * Mentee Dashboard Frontend Script (Auth-Enabled & Revised)
+         * Handles API calls, UI updates, event listeners, and navigation for the mentee view.
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("Mentee Dashboard JavaScript Initializing (Auth Version)...");
+
+            // --- Authentication Check ---
+            const userRole = sessionStorage.getItem('userRole');
+            const userId = sessionStorage.getItem('userId');
+            const userName = sessionStorage.getItem('userName'); // Logged-in username
+            const dashboardWrapper = document.getElementById('dashboardWrapper');
+
+            if (!userId || userRole !== 'mentee') {
+                console.log("Auth check failed. Redirecting to login.");
+                // alert('Access Denied. Please login as a mentee.'); // Optional alert
+                window.location.href = 'login.html';
+                return;
+            } else {
+                console.log(`Authenticated as Mentee: User ID ${userId}, Username: ${userName}`);
+                 if(dashboardWrapper) dashboardWrapper.style.visibility = 'visible'; // Show dashboard
+            }
+
+            // --- Global Element References ---
+            const pageTitle = document.getElementById('pageTitle');
+            const sidebarMenteeName = document.getElementById('sidebarMenteeName');
+            const navbarMenteeName = document.getElementById('navbarMenteeName');
+            const welcomeMenteeName = document.getElementById('welcomeMenteeName');
+            const sidebarMenteePhoto = document.getElementById('sidebarMenteePhoto');
+            const navbarMenteePhoto = document.getElementById('navbarMenteePhoto');
+            const dashboardMenteePhoto = document.getElementById('dashboardMenteePhoto');
+            const currentYearSpan = document.getElementById('currentYear');
+            const upcomingMeetingsCountEl = document.getElementById('upcomingMeetingsCount');
+            const myOpenIssuesCountEl = document.getElementById('myOpenIssuesCount');
+            const menteeUpcomingMeetingsList = document.getElementById('menteeUpcomingMeetingsList');
+            const menteeOpenIssuesList = document.getElementById('menteeOpenIssuesList');
+            const menteeNoOpenIssuesMsg = document.getElementById('menteeNoOpenIssuesMsg');
+            const mentorDetailsSection = document.getElementById('mentorDetailsSection');
+            const fullMeetingListEl = document.getElementById('fullMeetingList');
+            const fullIssueListEl = document.getElementById('fullIssueList');
+            const fullMentorProfileEl = document.getElementById('fullMentorProfile');
+            const mentorNotesListEl = document.getElementById('mentorNotesList');
+            const navLinks = document.querySelectorAll('.sidebar .nav-link[data-section]');
+            const sections = document.querySelectorAll('.dashboard-section');
+            const notificationBadge = document.getElementById('notificationBadge');
+            const notificationList = document.getElementById('notificationList');
+            const toastContainer = document.querySelector('.toast-container');
+            const menteeReportIssueModalElement = document.getElementById('menteeReportIssueModal');
+            const menteeReportIssueBootstrapModal = menteeReportIssueModalElement ? new bootstrap.Modal(menteeReportIssueModalElement) : null;
+
+             // --- State Variables ---
+             let menteeDetails = null;
+             let myMeetings = [];
+             let myIssues = [];
+             let myMentor = null;
+             let myNotes = [];
+             let currentNotifications = [];
+
+            // --- API Configuration ---
+            // ** ENSURE THIS IS CORRECT AND UNCOMMENTED **
+             const API_MENTEE_BASE_URL = 'http://localhost:8080/api/mentee/me';
+
+             const API_LOGOUT_URL = 'http://localhost:8080/api/logout';
+             // Ensure API_ENDPOINTS uses the correct base URL
+             const API_ENDPOINTS = {
+                 details: `${API_MENTEE_BASE_URL}/details`,
+                 meetings: `${API_MENTEE_BASE_URL}/meetings`,
+                 issues: `${API_MENTEE_BASE_URL}/issues`,
+                 postIssue: `${API_MENTEE_BASE_URL}/issues`, // POST uses same URL as GET
+                 mentor: `${API_MENTEE_BASE_URL}/mentor`,
+                 notes: `${API_MENTEE_BASE_URL}/notes`,
+                 notifications: `${API_MENTEE_BASE_URL}/notifications`,
+                 logout: API_LOGOUT_URL
+             };
+             const AUTH_HEADER_NAME = 'X-User-ID';
+             const NOTIFICATION_POLL_INTERVAL = 60000;
+
+            // --- Helper Functions (Make sure these are included and correct) ---
+            const showToast = (message, type = 'info') => { if (!toastContainer) return; const toastId = 'toast-' + Date.now(); let c = 'text-bg-secondary'; switch (type) { case 'success': c = 'text-bg-success'; break; case 'danger': c = 'text-bg-danger'; break; case 'warning': c = 'text-bg-warning'; break; case 'info': c = 'text-bg-info'; break; } const h = `<div id="${toastId}" class="toast align-items-center ${c} border-0" role="alert" aria-live="assertive" aria-atomic="true"><div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div></div>`; toastContainer.insertAdjacentHTML('beforeend', h); const e = document.getElementById(toastId); if (e) { const t = new bootstrap.Toast(e, { delay: 5000 }); t.show(); e.addEventListener('hidden.bs.toast', () => e.remove()); } else { console.error("Failed to find toast element:", toastId); } };
+            const showLoading = (element, message = "Loading...") => { if(element) element.innerHTML = `<div class="loading-placeholder p-3">${message} <span class="spinner-border spinner-border-sm ms-2"></span></div>`; };
+            const showError = (element, message = "Failed to load data.") => { if(element) element.innerHTML = `<div class="alert alert-warning" role="alert">${message}</div>`; };
+            const formatDateTime = (d, t) => { if (!d || !t) return { formattedDate: 'Invalid Date', formattedTime: '', dateObj: null }; let o = new Date(`${d}T${t}`); if (isNaN(o.getTime())) { o = new Date(`${d} ${t}`); if(isNaN(o.getTime())) return { formattedDate: 'Invalid Date', formattedTime: '', dateObj: null }; } const fD = o.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); const fT = o.toLocaleTimeString(undefined, { hour: 'numeric', minute: 'numeric', hour12: true }); return { formattedDate:fD, formattedTime:fT, dateObj:o }; };
+            const calculateEndTime = (o, m) => { if (!o || isNaN(o.getTime())) return ''; const d = parseInt(m, 10); if (isNaN(d) || d <= 0) return ''; const e = new Date(o.getTime() + d * 60000); return ` - ${e.toLocaleTimeString(undefined, { hour: 'numeric', minute: 'numeric', hour12: true })}`; };
+            const getPriorityInfo = (p) => { let c = 'bg-secondary'; switch (p?.toLowerCase()) { case 'high': c = 'bg-danger'; break; case 'medium': c = 'bg-warning text-dark'; break; case 'low': c = 'bg-success'; break; } return { badgeClass:c }; };
+            const getStatusInfo = (s) => { let c = 'bg-secondary'; switch (s?.toLowerCase()) { case 'open': c = 'bg-danger'; break; case 'in progress': c = 'bg-warning text-dark'; break; case 'resolved': c = 'bg-success'; break; } return { badgeClass:c }; };
+            const generatePlaceholderPhoto = (n, z = 90) => { if (!n) return `https://via.placeholder.com/${z}/adb5bd/ffffff?text=?`; const i = n.split(' ').map(x => x[0]).join('').substring(0, 2).toUpperCase(); return `https://via.placeholder.com/${z}/adb5bd/ffffff?text=${i}`; };
+            async function fetchData(url, options = {}) { const uid = sessionStorage.getItem('userId'); if (!uid) { throw new Error("User not authenticated"); } const h = { 'Content-Type': 'application/json', 'Accept': 'application/json', [AUTH_HEADER_NAME]: uid }; const opt = { ...options, headers: { ...h, ...options.headers } }; console.log(`Workspaceing ${url} for Mentee with options:`, opt); try { const r = await fetch(url, opt); if (r.status === 401) { sessionStorage.clear(); window.location.href = 'login.html'; throw new Error("Unauthorized"); } if (!r.ok) { let e = 'Err'; try { const d = await r.json(); e = d?.error||d?.message||JSON.stringify(d); } catch (_) { try { e = await r.text(); } catch (_) {} } throw new Error(`HTTP error ${r.status}: ${e}`); } if (r.status === 204) return null; const data = await r.json(); return data; } catch (err) { console.error(`Workspace Error for ${url}:`, err); showToast(`Network/Server Error: ${err.message}`, 'danger'); throw err; } };
+
+            // --- Data Rendering Functions (Ensure these are complete and correct) ---
+             const populateMenteeUI = (mentee) => { const n = mentee?.name || userName || "Mentee"; const p1 = generatePlaceholderPhoto(n, 90); const p2 = generatePlaceholderPhoto(n, 30); if (sidebarMenteeName) sidebarMenteeName.textContent = n; if (navbarMenteeName) navbarMenteeName.textContent = n; if (welcomeMenteeName) welcomeMenteeName.textContent = n; if (sidebarMenteePhoto) sidebarMenteePhoto.src = p1; if (navbarMenteePhoto) navbarMenteePhoto.src = p2; if (dashboardMenteePhoto) dashboardMenteePhoto.src = p1; };
+             const renderMyUpcomingMeetings = () => { if (!menteeUpcomingMeetingsList) return; menteeUpcomingMeetingsList.innerHTML = ''; const now = new Date(); const upcoming = myMeetings.filter(m => { const d = new Date(`${m.date}T${m.time}`); return !isNaN(d) && d >= now; }).sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`)).slice(0, 3); if (upcoming.length === 0) { showError(menteeUpcomingMeetingsList, "No upcoming meetings."); return; } upcoming.forEach(m => { const { formattedDate:fd, formattedTime:ft, dateObj:o } = formatDateTime(m.date, m.time); if (!o) return; const et = calculateEndTime(o, m.duration); menteeUpcomingMeetingsList.innerHTML += `<div class="list-group-item"><div class="d-flex w-100 justify-content-between"><h6 class="mb-1">Meeting with Mentor</h6><small class="text-muted">${fd}</small></div><p class="mb-1"><i class="fas fa-clock me-2 text-muted"></i>${ft}${et}</p>${m.notes ? `<p class="mb-1 small text-muted fst-italic">Notes: ${m.notes}</p>` : ''}</div>`; }); };
+             const renderMyOpenIssues = () => { if (!menteeOpenIssuesList) return; menteeOpenIssuesList.innerHTML = ''; const openIssues = myIssues.filter(i => i.status?.toLowerCase() === 'open').sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0)).slice(0, 3); if (openIssues.length === 0) { menteeNoOpenIssuesMsg.style.display = 'block'; return; } menteeNoOpenIssuesMsg.style.display = 'none'; openIssues.forEach(i => { const { formattedDate:fd } = formatDateTime(i.date, '00:00'); const pInfo = getPriorityInfo(i.priority); menteeOpenIssuesList.innerHTML += `<a href="#" class="list-group-item list-group-item-action" data-section-target="my-issues"><div class="d-flex w-100 justify-content-between"><h6 class="mb-1">${i.description || '...'}</h6><small class="text-muted">${fd}</small></div><small><span class="badge ${pInfo.badgeClass}">${i.priority || 'N/A'}</span></small></a>`; }); };
+             const renderMentorDetails = () => { if (!mentorDetailsSection) return; if (!myMentor) { showError(mentorDetailsSection, "Mentor details unavailable."); return; } const n = myMentor.name || "Mentor"; const e = myMentor.email || "..."; const s = myMentor.subject || "..."; const p = generatePlaceholderPhoto(n, 50); mentorDetailsSection.innerHTML = `<div class="d-flex align-items-center"><div><h6 class="mb-0">${n}</h6><p class="mb-0 text-muted small">${s}</p><a href="mailto:${e}" class="small">${e}</a></div></div>`; };
+             const renderFullMentorProfile = () => { if (!fullMentorProfileEl) return; if (!myMentor) { showError(fullMentorProfileEl, "Mentor profile unavailable."); return; } const n = myMentor.name || "Mentor"; const e = myMentor.email || "Not Provided"; const s = myMentor.subject || "General Mentorship"; const p = generatePlaceholderPhoto(n, 100); fullMentorProfileEl.innerHTML = `<div class="text-center mb-3"><h4>${n}</h4><p class="text-muted">${s}</p></div><p><strong>Email:</strong> <a href="mailto:${e}">${e}</a></p>`; };
+             const renderFullMeetingList = () => { if (!fullMeetingListEl) return; fullMeetingListEl.innerHTML = ''; if (myMeetings.length === 0) { showError(fullMeetingListEl, "No meetings scheduled."); return; } const sortedMeetings = [...myMeetings].sort((a, b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`)); const lg = document.createElement('div'); lg.className = 'list-group list-group-flush'; sortedMeetings.forEach(m => { const { formattedDate:fd, formattedTime:ft, dateObj:o } = formatDateTime(m.date, m.time); if (!o) return; const et = calculateEndTime(o, m.duration); const ip = o < new Date(); lg.innerHTML += `<div class="list-group-item ${ip ? 'opacity-75' : ''}"><div class="d-flex w-100 justify-content-between"><h5 class="mb-1">Meeting with Mentor</h5><small>${fd}</small></div><p class="mb-1"><i class="fas fa-clock me-2 text-muted"></i>${ft}${et}</p>${m.notes ? `<p class="mb-1 small text-muted fst-italic">Notes: ${m.notes}</p>` : ''}${ip ? '<span class="badge bg-secondary">Completed</span>' : '<span class="badge bg-info">Upcoming</span>'}</div>`; }); fullMeetingListEl.appendChild(lg); };
+             const renderFullIssueList = () => { if (!fullIssueListEl) return; fullIssueListEl.innerHTML = ''; if (myIssues.length === 0) { showError(fullIssueListEl, "No issues reported."); return; } const sortedIssues = [...myIssues].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0)); const lg = document.createElement('div'); lg.className = 'list-group list-group-flush'; sortedIssues.forEach(i => { const { formattedDate:fd } = formatDateTime(i.date, '00:00'); const pInfo = getPriorityInfo(i.priority); const sInfo = getStatusInfo(i.status); let notesHTML = ''; if (Array.isArray(i.notes) && i.notes.length > 0) { notesHTML = '<h6 class="mt-3 mb-1 small text-muted">Mentor Responses:</h6><ul class="list-unstyled ps-3">'; i.notes.sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0)).forEach(n => { const nd = n.timestamp ? new Date(n.timestamp * 1000).toLocaleString() : '?'; notesHTML += `<li class="small fst-italic mb-1">"${n.text || ''}" <span class="text-muted"> - ${nd}</span></li>`; }); notesHTML += '</ul>'; } lg.innerHTML += `<div class="list-group-item"><div class="d-flex w-100 justify-content-between"><h5 class="mb-1">${i.description || '...'}</h5><small>${fd}</small></div><p class="mb-1"><span class="badge ${pInfo.badgeClass} me-2">${i.priority || 'N/A'}</span><span class="badge ${sInfo.badgeClass}">${i.status || 'N/A'}</span></p>${notesHTML}</div>`; }); fullIssueListEl.appendChild(lg); };
+             const renderMentorNotes = () => { if (!mentorNotesListEl) return; mentorNotesListEl.innerHTML = ''; if (myNotes.length === 0) { showError(mentorNotesListEl, "No notes from mentor."); return; } const sortedNotes = [...myNotes].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)); const lg = document.createElement('div'); lg.className = 'list-group list-group-flush'; sortedNotes.forEach(n => { const nd = n.timestamp ? new Date(n.timestamp * 1000).toLocaleString() : '?'; lg.innerHTML += `<div class="list-group-item"><p class="mb-1">${n.text || '...'}</p><small class="text-muted">${nd}</small></div>`; }); mentorNotesListEl.appendChild(lg); };
+            function renderNotifications() { if (!notificationList || !notificationBadge) return; notificationList.innerHTML = ''; if (currentNotifications.length === 0) { notificationList.innerHTML = '<li><p class="dropdown-item text-muted small">No notifications.</p></li>'; notificationBadge.style.display = 'none'; return; } currentNotifications.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)); notificationBadge.textContent = currentNotifications.length; notificationBadge.style.display = 'inline-block'; currentNotifications.forEach(n => { const d = new Date((n.timestamp || 0) * 1000); const t = formatTimeAgo(d); const li = document.createElement('li'); li.innerHTML = `<a class="dropdown-item text-wrap" href="#"><div class="small">${n.text || '...'}</div><div class="text-muted small">${t}</div></a>`; notificationList.appendChild(li); }); notificationList.insertAdjacentHTML('beforeend', '<li><hr class="dropdown-divider"></li><li><a class="dropdown-item text-center text-muted small" href="#">View all</a></li>'); }
+            function formatTimeAgo(d) { const s = Math.floor((new Date() - d) / 1000); let i = s / 31536000; if (i > 1) return Math.floor(i) + "y ago"; i = s / 2592000; if (i > 1) return Math.floor(i) + "mo ago"; i = s / 86400; if (i > 1) return Math.floor(i) + "d ago"; i = s / 3600; if (i > 1) return Math.floor(i) + "h ago"; i = s / 60; if (i > 1) return Math.floor(i) + "m ago"; return Math.floor(s) + "s ago"; }
+
+            // --- Data Fetching Logic ---
+             async function fetchAllMenteeData() {
+                 console.log("Fetching all mentee dashboard data...");
+                 try {
+                    menteeDetails = await fetchData(API_ENDPOINTS.details); console.log("Mentee details:", menteeDetails);
+                    myNotes = menteeDetails?.general_notes || [];
+                    populateMenteeUI(menteeDetails); renderMentorNotes();
+                    await Promise.all([
+                        (async () => { myMeetings = await fetchData(API_ENDPOINTS.meetings); console.log("Meetings:", myMeetings); })(),
+                        (async () => { myIssues = await fetchData(API_ENDPOINTS.issues); console.log("Issues:", myIssues); })(),
+                        (async () => { myMentor = await fetchData(API_ENDPOINTS.mentor); console.log("Mentor:", myMentor); })(),
+                        (async () => { currentNotifications = await fetchData(API_ENDPOINTS.notifications); console.log("Notifications:", currentNotifications); })()
+                    ]);
+                    renderMyUpcomingMeetings(); renderMyOpenIssues(); renderMentorDetails();
+                    renderFullMeetingList(); renderFullIssueList(); renderFullMentorProfile();
+                    renderNotifications();
+                    upcomingMeetingsCountEl.textContent = myMeetings.filter(m => new Date(`${m.date}T${m.time}`) >= new Date()).length;
+                    myOpenIssuesCountEl.textContent = myIssues.filter(i => i.status?.toLowerCase() === 'open').length;
+                    console.log("Initial mentee data fetch complete.");
+                } catch (error) { console.error("Error fetching initial mentee data:", error); showToast("Failed to load dashboard.", "danger"); }
+             }
+            async function pollNotifications() { console.log("Polling mentee notifications..."); try { const data = await fetchData(API_ENDPOINTS.notifications); currentNotifications = Array.isArray(data) ? data : []; renderNotifications(); } catch (error) { if (error.message !== "Unauthorized") console.error("Notify poll fail:", error); } }
+
+            // --- Navigation & Section Display Logic ---
+             const activateSection = (sectionId) => { if (!sectionId) sectionId = 'dashboard'; let act = false; sections.forEach(s => { if (s.id === sectionId) { s.classList.add('active'); act = true; } else { s.classList.remove('active'); } }); if (!act) { sectionId = 'dashboard'; document.getElementById('dashboard')?.classList.add('active'); } const link = document.querySelector(`.sidebar .nav-link[data-section="${sectionId}"]`); if (pageTitle) pageTitle.textContent = link ? link.textContent.trim() : 'Dashboard'; navLinks.forEach(l => { l.classList.toggle('active', l.getAttribute('data-section') === sectionId); }); console.log(`Activated section: ${sectionId}`); };
+             navLinks.forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); activateSection(e.currentTarget.getAttribute('data-section')); }); });
+             document.body.addEventListener('click', (e) => { const target = e.target.closest('[data-section-target]'); if(target){ e.preventDefault(); activateSection(target.getAttribute('data-section-target')); } });
+
+            // --- Mentee Report Issue Form Handler ---
+            const menteeReportIssueForm = document.getElementById('menteeReportIssueForm');
+            if (menteeReportIssueForm) {
+                menteeReportIssueForm.addEventListener('submit', async function(e) {
+                    e.preventDefault(); const desc = document.getElementById('menteeIssueDescription').value.trim(); const prio = document.getElementById('menteeIssuePriority').value; const btn = this.querySelector('button[type="submit"]'); if (!desc) { showToast('Please enter description.', 'warning'); return; } const data = { description: desc, priority: prio, date: new Date().toISOString().split('T')[0] }; btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Reporting...';
+                    try { const reported = await fetchData(API_ENDPOINTS.postIssue, { method: 'POST', body: JSON.stringify(data) }); showToast(`Issue reported!`, 'success'); this.reset(); if (menteeReportIssueBootstrapModal) menteeReportIssueBootstrapModal.hide(); myIssues = await fetchData(API_ENDPOINTS.issues); renderMyOpenIssues(); renderFullIssueList(); myOpenIssuesCountEl.textContent = myIssues.filter(i => i.status?.toLowerCase() === 'open').length; }
+                    catch (error) { console.error("Error reporting issue:", error); } finally { btn.disabled = false; btn.innerHTML = 'Report Issue'; }
+                });
+            }
+
+            // --- Logout Logic ---
+             async function handleLogout(e) { e.preventDefault(); console.log("Logout..."); try { /* Optional call backend */ } catch (error) { console.error("Logout error:", error); } finally { sessionStorage.clear(); window.location.href = 'login.html'; } };
+             document.querySelectorAll('#logoutLinkSidebar, #logoutLinkDropdown').forEach(link => { link.addEventListener('click', handleLogout); });
+
+            // --- Initial Page Load ---
+            console.log("Mentee DOM Loaded. Setting defaults and fetching data...");
+            if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
+            populateMenteeUI(null); // Show stored username first
+            activateSection('dashboard');
+            fetchAllMenteeData();
+            setInterval(pollNotifications, NOTIFICATION_POLL_INTERVAL);
+            console.log(`Notification polling started.`);
+
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>

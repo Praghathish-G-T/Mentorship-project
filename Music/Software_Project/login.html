@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mentor/Mentee Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styles specific to login page centering (already in your style.css but repeated for clarity) */
+        body.login-body { /* Added a class for specificity */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* You can add a gradient or background image here or in style.css */
+             background: linear-gradient(to bottom right, #eef2f3, #d7dbdf);
+        }
+    </style>
+</head>
+<body class="login-body"> <div class="card login-card">
+        <div class="card-header text-center py-3">
+            <img src="https://www.ssn.edu.in/wp-content/uploads/2019/12/logo.jpg" alt="Logo" class="mb-2" style="border-radius: 5px;"> <h3 class="mb-0">Dashboard Login</h3>
+        </div>
+        <div class="card-body p-4 p-md-5">
+
+            <div id="errorMessage" class="alert alert-danger d-none" role="alert">
+                </div>
+
+            <form id="loginForm">
+                <div class="mb-3 text-center role-selection">
+                    <label class="form-label d-block mb-2">Login as:</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="loginRole" id="roleMentor" value="mentor" required checked>
+                        <label class="form-check-label" for="roleMentor">
+                            <i class="fas fa-user-tie me-1"></i> Mentor
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="loginRole" id="roleMentee" value="mentee" required>
+                        <label class="form-check-label" for="roleMentee">
+                            <i class="fas fa-user-graduate me-1"></i> Mentee
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user fa-fw"></i></span>
+                        <input type="text" class="form-control" id="username" required autocomplete="username" placeholder="Enter username">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock fa-fw"></i></span>
+                        <input type="password" class="form-control" id="password" required autocomplete="current-password" placeholder="Enter password">
+                    </div>
+                     </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg login-button"> <span class="spinner-border spinner-border-sm d-none me-1" role="status" aria-hidden="true"></span>
+                        Login
+                    </button>
+                </div>
+
+                 </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorMessageDiv = document.getElementById('errorMessage');
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            const spinner = submitButton.querySelector('.spinner-border');
+            const API_LOGIN_URL = 'http://localhost:8080/api/login';
+
+            loginForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                errorMessageDiv.classList.add('d-none');
+                spinner.classList.remove('d-none');
+                submitButton.disabled = true;
+
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value;
+                const selectedRole = document.querySelector('input[name="loginRole"]:checked')?.value;
+
+                if (!selectedRole) {
+                    errorMessageDiv.textContent = 'Please select your role (Mentor or Mentee).';
+                    errorMessageDiv.classList.remove('d-none');
+                    spinner.classList.add('d-none');
+                    submitButton.disabled = false;
+                    return;
+                }
+
+                try {
+                    const response = await fetch(API_LOGIN_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ username: username, password: password, role: selectedRole })
+                    });
+
+                    let responseData;
+                    const contentType = response.headers.get("content-type");
+                     if (contentType && contentType.includes("application/json")) {
+                         responseData = await response.json();
+                     } else {
+                         responseData = await response.text();
+                         console.warn("Login response was not JSON:", responseData);
+                         if (!response.ok) { throw new Error(responseData || `HTTP error ${response.status}`); }
+                         throw new Error("Login succeeded but received unexpected response format.");
+                     }
+
+                    console.log("Login Response Status:", response.status);
+                    console.log("Login Response Data:", responseData);
+
+                    if (!response.ok) {
+                        const errorMsg = responseData?.error || `Login failed (Status: ${response.status})`;
+                        throw new Error(errorMsg);
+                    }
+
+                    if (responseData.success && responseData.role === selectedRole) {
+                        console.log("Login successful! Role:", responseData.role, "UserID:", responseData.userId);
+                        sessionStorage.setItem('userRole', responseData.role);
+                        sessionStorage.setItem('userId', responseData.userId);
+                        sessionStorage.setItem('userName', username);
+
+                        if (responseData.role === 'mentor') {
+                            window.location.href = 'Mentor_Landing_Page_Refactored.html';
+                        } else if (responseData.role === 'mentee') {
+                            window.location.href = 'Mentee_Dashboard_Page.html';
+                        } else {
+                             errorMessageDiv.textContent = 'Login successful but role is unknown.';
+                             errorMessageDiv.classList.remove('d-none');
+                        }
+                    } else {
+                        console.error("Login response mismatch or missing fields:", responseData);
+                        throw new Error(responseData.error || "Login failed: Role mismatch or invalid server response.");
+                    }
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    errorMessageDiv.textContent = error.message || 'An error occurred. Please try again.';
+                    errorMessageDiv.classList.remove('d-none');
+                } finally {
+                    spinner.classList.add('d-none');
+                    submitButton.disabled = false;
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
